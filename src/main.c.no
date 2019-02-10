@@ -1,0 +1,7 @@
+#include <stdio.h>
+#include "readline.h"
+
+int main(int argc, char *argv[]) {
+	read_line("POP> ");
+	return 0;
+}
