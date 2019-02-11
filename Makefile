@@ -3,7 +3,7 @@ CFLAGS = -Wall --pedantic --std=c99
 SOURCE_FOLDER = src
 OUT_FOLDER = bin
 SOURCE_FILES = $(SOURCE_FOLDER)/*.c
-LIB_NAME = libreadline
+LIB_NAME = libreadline.a
 DEPENDENCIES_FOLDER = dependencies
 
 ANSI_IS_A_CURSE = ANSIsACurse
@@ -26,13 +26,13 @@ prepare_dependencies:
 		echo "Making $$ANSI_IS_A_CURSE ..." ; \
 		make -C $(ANSI_IS_A_CURSE); \
 		cp $(ANSI_IS_A_CURSE)/bin/headers/*.h $(DEPENDENCIES_FOLDER)/$(ANSI_IS_A_CURSE)/ ; \
-		cp $(ANSI_IS_A_CURSE)/bin/libs/*.* $(DEPENDENCIES_FOLDER)/libs ; \
+		cp $(ANSI_IS_A_CURSE)/bin/libs/*.a $(DEPENDENCIES_FOLDER)/libs ; \
 		rm -rf $(ANSI_IS_A_CURSE); \
 	fi;
 
 compile_dylib: taget_dir 
 	@ echo "Compiling dylib..."
-	@ $(CC) -I$(DEPENDENCIES_FOLDER) $(CFLAGS) $(SOURCE_FILES) -c 
+	@ $(CC) -I$(DEPENDENCIES_FOLDER) $(CFLAGS) $(SOURCE_FILES) -c $(DEPENDENCIES_FOLDER)/libs/*.a
 	@ ar rs $(LIB_NAME) *.o
 	@ cp $(LIB_NAME) bin/libs
 	@ rm *.o $(LIB_NAME)
