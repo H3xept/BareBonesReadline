@@ -3,7 +3,7 @@ CFLAGS = -Wall --pedantic --std=c99
 SOURCE_FOLDER = src
 OUT_FOLDER = bin
 SOURCE_FILES = $(SOURCE_FOLDER)/*.c
-LIB_NAME = bbreadline
+LIB_NAME = libreadline
 DEPENDENCIES_FOLDER = dependencies
 
 ANSI_IS_A_CURSE = ANSIsACurse
@@ -32,9 +32,10 @@ prepare_dependencies:
 
 compile_dylib: taget_dir 
 	@ echo "Compiling dylib..."
-	@ $(CC) -I$(DEPENDENCIES_FOLDER) $(CFLAGS) $(SOURCE_FILES) -c -fpic
-	$(CC) -L$(DEPENDENCIES_FOLDER)/libs -lansisacurse -shared -o $(OUT_FOLDER)/libs/lib$(LIB_NAME).so *.o 
-	@ rm *.o
+	@ $(CC) -I$(DEPENDENCIES_FOLDER) $(CFLAGS) $(SOURCE_FILES) -c 
+	@ ar rs $(LIB_NAME) *.o
+	@ cp $(LIB_NAME) bin/libs
+	@ rm *.o $(LIB_NAME)
 
 copy_headers: taget_dir
 	@ echo "Copying headers..."
