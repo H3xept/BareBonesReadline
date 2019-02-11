@@ -33,7 +33,7 @@ prepare_dependencies:
 compile_dylib: taget_dir 
 	@ echo "Compiling dylib..."
 	@ $(CC) -I$(DEPENDENCIES_FOLDER) $(CFLAGS) $(SOURCE_FILES) -c -fpic
-	$(CC) -L$(DEPENDENCIES_FOLDER)/libs -lansiisacurse -shared -o $(OUT_FOLDER)/libs/lib$(LIB_NAME).so *.o 
+	$(CC) -L$(DEPENDENCIES_FOLDER)/libs -lansisacurse -shared -o $(OUT_FOLDER)/libs/lib$(LIB_NAME).so *.o 
 	@ rm *.o
 
 copy_headers: taget_dir
