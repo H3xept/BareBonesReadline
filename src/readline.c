@@ -59,14 +59,14 @@ unsigned int handle_control_key(char c, char* current_buffer, unsigned int* curs
 	}
 	return ret;
 }
-char* read_line(char* display_str) {
+char* read_line(char* prompt) {
 	
 	#define MAX_BUFFER_SIZE 500
 	
 	char current_buffer[MAX_BUFFER_SIZE] = {0};
 	unsigned int cursor_location = 0;
 	
-	printf("%s",display_str);
+	printf("%s",prompt);
 	
 	struct termios new_termios_data = copy_current_termios_data();
 	new_termios_data.c_iflag &= ~(IXON);
