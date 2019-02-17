@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 void testTestino() {
-	assert_true(0);
+	assert_true(1);
 }
 void testTestino2() {
 	return;
