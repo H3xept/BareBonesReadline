@@ -10,7 +10,7 @@ ANSI_IS_A_CURSE = ANSIsACurse
 ANSI_IS_A_CURSE_LOCATION = ../$(ANSI_IS_A_CURSE)
 ANSI_IS_A_CURSE_LOCATION_GIT = "https://github.com/H3xept/ANSIsACurse"
 
-all: taget_dir prepare_dependencies compile_dylib copy_headers
+all: taget_dir prepare_dependencies test compile_dylib copy_headers
 	
 prepare_dependencies: 
 	@ echo "Preparing dependencies";
@@ -48,6 +48,12 @@ taget_dir:
 	@ mkdir -p $(DEPENDENCIES_FOLDER)
 	@ mkdir -p $(DEPENDENCIES_FOLDER)/$(ANSI_IS_A_CURSE)
 	@ mkdir -p $(DEPENDENCIES_FOLDER)/libs
+
+test:
+	@ echo "\033[1mInit testing for $(OUT_NAME)...\033[0m"
+	@ python3 runTests.py tests/*Test.h
+	@ echo "\033[32m\033[1mTesting complete!\033[0m"
+	
 
 clean:
 	@ echo "Cleaning..."

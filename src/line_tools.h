@@ -5,8 +5,9 @@
 #ifndef _line_tools_h_
 #define _line_tools_h_
 
-void com_backspace(char* current_buffer, unsigned int* cursor_location);
-void com_delete(char* current_buffer, unsigned int* cursor_location);
-void com_arrow_left(unsigned int* cursor_location);
+void com_backspace(char* const current_buffer, unsigned int* cursor_location);
+void com_delete(char* const current_buffer, unsigned int* cursor_location);
+
+void insert_char(char* const current_buffer, unsigned int* cursor_location, const char c);
 
 #endif
