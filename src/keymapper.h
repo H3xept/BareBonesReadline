@@ -15,5 +15,5 @@ void km_add_new(struct KeyMap* head, int key, Function* function);
 struct KeyMap* km_search(struct KeyMap* node, int key);
 void km_destroy(struct KeyMap* head);
 void km_safe_exec(struct KeyMap* head, int key);
-void km_edit(int key, Function* new_function);
+void km_edit(struct KeyMap* head, int key, Function* new_function);
 #endif
