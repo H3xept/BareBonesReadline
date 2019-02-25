@@ -24,13 +24,15 @@ void km_add(struct KeyMap* head, struct KeyMap* new_node) {
 }
 
 struct KeyMap * km_search(struct KeyMap* node, int key) {
-	int start_key = node->key;
+	assert(node);
 	struct KeyMap* search_node = node;
+
 	do {
 		if (search_node->key == key) {
 			return search_node;
 		} search_node = search_node->next;
-	} while(search_node->key != start_key);
+	} while(search_node != NULL);
+
 	return NULL;
 }
 

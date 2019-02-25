@@ -1,5 +1,6 @@
 #include <ANSIsACurse/cursor.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "handlers.h"
 #include "line.h"
@@ -26,7 +27,6 @@ int h_line_arrow_down() {
 	return 0;
 }
 
-
 int h_line_arrow_left() {
 	int can_move_left = g_line->cursor_location > 0;
 	if (can_move_left) {
@@ -42,5 +42,15 @@ int h_line_arrow_right() {
 		mv_c_rt(1);
 		g_line->cursor_location += 1;
 	}
+	return 0;
+}
+
+int h_control_c() {
+	printf("\n");
+	return 0;
+}
+
+int h_enter() {
+	printf("\n");
 	return 0;
 }

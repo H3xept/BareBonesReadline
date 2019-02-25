@@ -16,13 +16,6 @@
 
 #define MAX_INPUT_BUFFER_SIZE 500
 
-typedef enum {
-	KEY_COMBO_ARROW_UP = 0xdead,
-	KEY_COMBO_ARROW_DOWN,
-	KEY_COMBO_ARROW_LEFT,
-	KEY_COMBO_ARROW_RIGHT
-} KEY_COMBO;
-
 Line* g_line;
 struct KeyMap* g_head;
 
@@ -68,23 +61,6 @@ void redraw_line(const char* const prompt) {
 	restore_c_pos();
 }
 
-void handle_arrows(Line* line, const int arrow) {
-	switch(arrow) {
-		case KEY_COMBO_ARROW_UP:
-			h_line_arrow_up();
-			break;
-		case KEY_COMBO_ARROW_DOWN:
-			h_line_arrow_down();
-			break;
-		case KEY_COMBO_ARROW_RIGHT:
-			h_line_arrow_right();
-			break;
-		case KEY_COMBO_ARROW_LEFT:
-			h_line_arrow_left();
-			break;
-	}
-}
-
 int read_character() {
 
 	int readc = 0;
@@ -97,19 +73,19 @@ int read_character() {
 		}
 	}
 
-	if (c == CTRL_CTRL) {
+	if (c == ASCII_CONTROL) {
 		int char_sequence[2] = {0};
 		
-		if (read(STDIN_FILENO, char_sequence, 1) != 1) return CTRL_CTRL;
-    	if (read(STDIN_FILENO, char_sequence+1, 1) != 1) return CTRL_CTRL;
+		if (read(STDIN_FILENO, char_sequence, 1) != 1) return ASCII_CONTROL;
+    	if (read(STDIN_FILENO, char_sequence+1, 1) != 1) return ASCII_CONTROL;
     	
     	if (*char_sequence == '[') { // Is it an arrow key?
     		int arrow = *(char_sequence+1);
     		switch(arrow) {
-	    		case 'A': return KEY_COMBO_ARROW_UP;
-	    		case 'B': return KEY_COMBO_ARROW_DOWN;
-	    		case 'C': return KEY_COMBO_ARROW_RIGHT;
-	    		case 'D': return KEY_COMBO_ARROW_LEFT;
+	    		case 'A': return KEYMAP_HANDLE_ARROW_UP;
+	    		case 'B': return KEYMAP_HANDLE_ARROW_DOWN;
+	    		case 'C': return KEYMAP_HANDLE_ARROW_RIGHT;
+	    		case 'D': return KEYMAP_HANDLE_ARROW_LEFT;
     		}
     	}
 	}
@@ -117,72 +93,46 @@ int read_character() {
 	return c;
 }
 
+int execute_handler(int c) {
+	struct KeyMap* node = km_search(g_head, c);
+	if (node) {
+		assert(node->function);
+		node->function();
+	} else {
+		line_printc(g_line, c);
+		return NOP;
+	} return c;
+}
 
 int handle_input() {
-	
 	int c = read_character();
-
-	switch(c) {
-
-		/*
-			I detect some trickery!
-			Mac OS (♡) handles delete and backspace in the same way - aka only backspace is implemented.
-		*/
-		#ifdef __MACH__
-		case DELETE_CTRL: // Delete
-			// INTENTIONAL ↧
-		case BACKSPACE_CTRL: // Backspace
-			km_safe_exec(g_head, KEYMAP_HANDLE_BACKSPACE);
-			break;
-		#else
-		case BACKSPACE_CTRL: // Backspace
-			km_safe_exec(g_head, KEYMAP_HANDLE_BACKSPACE);
-			break;
-		case DELETE_CTRL: // Delete
-			printf("\n\nUnimplemented. %s %s\n\n", __LINE__, __FILE__);
-			assert(0);
-			break;
-		#endif
-		/*
-		 	End of the trickery
-		 */
-
-		case ENTER_CTRL:
-			printf("\n");
-			break;	
-		case CTRL_C:
-			printf("\n");
-			break;
-
-		case KEY_COMBO_ARROW_UP:
-			km_safe_exec(g_head, KEYMAP_HANDLE_ARROW_UP);
-			break;
-		case KEY_COMBO_ARROW_DOWN:
-			km_safe_exec(g_head, KEYMAP_HANDLE_ARROW_DOWN);
-			break;
-		case KEY_COMBO_ARROW_LEFT:
-			km_safe_exec(g_head, KEYMAP_HANDLE_ARROW_LEFT);
-			break;
-		case KEY_COMBO_ARROW_RIGHT:
-			km_safe_exec(g_head, KEYMAP_HANDLE_ARROW_RIGHT);
-			break;
-
-		default:
-			line_printc(g_line, c);
-			return NOP;
-	}
-
-	return c;
+	return execute_handler(c);
 }
 
 void register_handlers() {
+
 	if (g_head == NULL) {
 		g_head = km_new(0, NULL);
 	}
 
-	km_add_new(g_head, KEYMAP_HANDLE_BACKSPACE, h_line_backspace);
-	// km_add_new(g_head, KEYMAP_HANDLE_CTRL_C, 
-	// km_add_new(g_head, KEYMAP_HANDLE_ENTER, 
+	/*
+		I detect some trickery!
+		Mac OS (♡) handles delete and backspace in the same way
+		> aka only backspace is implemented.
+	*/
+	#ifdef __MACH__
+		km_add_new(g_head, ASCII_BACKSPACE, h_line_backspace);
+		km_add_new(g_head, ASCII_DELETE, h_line_backspace);
+	#else
+		km_add_new(g_head, ASCII_BACKSPACE, h_line_backspace);
+		km_add_new(g_head, ASCII_DELETE, h_line_delete);
+	#endif
+	/*
+	 	End of the trickery
+	 */
+
+	km_add_new(g_head, ASCII_CONTROL_C, h_control_c);
+	km_add_new(g_head, ASCII_ENTER, h_enter);
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_UP, h_line_arrow_up); 
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_DOWN, h_line_arrow_down);  
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_LEFT, h_line_arrow_left);
@@ -208,9 +158,9 @@ char* read_line(const char* const prompt) {
 	while(1) {
 		switch(handle_input()) {
 			reset_termios_data();
-			case ENTER_CTRL:
+			case ASCII_ENTER:
 				return g_line->buffer;
-			case CTRL_C:
+			case ASCII_CONTROL_C:
 				return "";
 		}redraw_line(prompt);
 	}

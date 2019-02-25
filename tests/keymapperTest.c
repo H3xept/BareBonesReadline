@@ -57,3 +57,10 @@ void testSearch() {
 	km_add(head, new_node);
 	assert_eq_int(km_search(head, 4)->function(), 3);
 }
+
+void testedit() {
+	struct KeyMap* new_node = km_new(2,function2);
+	km_add(head, new_node);
+	km_edit(head, 2, function3);
+	assert_eq_int(km_search(head, 2)->function(), 3);
+}

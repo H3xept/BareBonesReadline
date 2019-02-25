@@ -6,6 +6,7 @@ void testReadHead();
 void testInsert();
 void testMiddleInsert();
 void testSearch();
+void testedit();
 void teardown();
 
 #endif

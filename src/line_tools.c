@@ -1,7 +1,3 @@
-//
-// line_tools.c
-// Created by Leonardo Cascianelli on 09/02/2019.
-
 #include "line_tools.h"
 #include <stdio.h>
 #include <string.h>
