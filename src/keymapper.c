@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <assert.h>
 #include "keymapper.h"
 
 struct KeyMap * km_new(int key, Function* function) {
@@ -41,4 +42,21 @@ void km_destroy(struct KeyMap* head) {
 		current_node = tmp;
 	} while(current_node != NULL);
 	head = NULL;
+}
+
+void km_add_new(struct KeyMap* head, int key, Function* function) {
+	struct KeyMap* new_node = km_new(key, function);
+	km_add(head, new_node);
+}
+
+void km_safe_exec(struct KeyMap* head, int key) {
+	struct KeyMap* node = km_search(head, key);
+	assert(node);
+	node->function();
+}
+
+void km_edit(struct KeyMap* head, int key, Function* new_function) {
+	struct KeyMap* node = km_search(head, key);
+	assert(node);
+	node->function = new_function;
 }
