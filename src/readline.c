@@ -19,6 +19,7 @@
 Line* g_line;
 struct KeyMap* g_head;
 
+static int initialised = 0;
 // -- Begin Termios Config --
 
 static struct termios* termios_data = NULL;
@@ -139,10 +140,14 @@ void register_handlers() {
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_RIGHT, h_line_arrow_right); 
 }
 
+char* parse_line(char* line) {
+	return line;
+}
+
 char* read_line(const char* const prompt) {
-	
+		
+	assert(initialised);
 	char* returned_string;
-	register_handlers();
 
 	if (g_line) {
 		free(g_line);
@@ -170,6 +175,14 @@ char* read_line(const char* const prompt) {
 	free(g_line);
 	g_line = 0;
 
-	return returned_string;
+	return parse_line(returned_string);
 }
 // -- End Input Handling
+
+void init_readline(void) {
+	register_handlers();
+}
+
+void teardown_readline(void) {
+	km_destroy(g_head);	
+}
