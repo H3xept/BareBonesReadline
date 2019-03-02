@@ -1,4 +1,4 @@
-#include "stringArrayTest.h"
+#include "keymapperTest.h"
 #include "../src/keymapper.h"
 #include "macros.h"
 #include <stdlib.h>

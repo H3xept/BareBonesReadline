@@ -55,6 +55,8 @@ struct StringComponents * components_with_globbing_symbol_index(const char* cons
 	}
 
 	for (int i = index+1; i < strlen(string); i++) {
+		if (*(string+i) == '/')
+			break;
 		*(after_gs+i-index-1) = *(string+i);
 	}
 
@@ -65,10 +67,6 @@ struct StringComponents * components_with_globbing_symbol_index(const char* cons
 	ret->after_gs = after_gs;
 
 	return ret;
-}
-
-int handle_star(char* det_path, char* to_glob, unsigned int gs_index) {
-	return 0;
 }
 
 char* last_determinisitc_path_for_string(const char* const string) {
@@ -96,7 +94,6 @@ char* last_determinisitc_path_for_string(const char* const string) {
 }
 
 static void filter_files_starting_with(char* sstring) {
-	assert(matches);
 	struct StringNode* current = matches;
 	while(current != NULL) {
 		char* str = current->data;
@@ -109,7 +106,6 @@ static void filter_files_starting_with(char* sstring) {
 }
 
 static void filter_files_ending_with(char* estring) {
-	assert(matches);
 	struct StringNode* current = matches;
 	while(current != NULL) {
 		char* str = current->data;
@@ -122,7 +118,6 @@ static void filter_files_ending_with(char* estring) {
 }
 
 static void hanlde_question_mark(char* before_gs) {
-	assert(matches);
 	int before_gs_len = (before_gs) ? strlen(before_gs) : 0;
 	struct StringNode* current = matches;
 	while(current != NULL) {
@@ -135,7 +130,7 @@ static void hanlde_question_mark(char* before_gs) {
 	}
 }
 
-static struct StringNode* glob_chain(const char* const string,
+static struct StringNode * glob_chain(const char* const string,
 						 const char* const det_path, 
 						 unsigned int gs_index) {
 
@@ -167,7 +162,7 @@ static struct StringNode* glob_chain(const char* const string,
 	return matches;
 }
 
-struct StringNode * expand_string(const char* const string) {
+struct StringNode * expand_string(const char* const string, struct StringNode* local_matches) {
 
 	assert(string);
 	struct StringNode* ret;
@@ -177,7 +172,7 @@ struct StringNode * expand_string(const char* const string) {
 	if (matches) {
 		sa_destroy(matches);
 		matches = 0;
-	}
+	} matches = local_matches;
 
 	for (int i = strlen(det_path); i < strlen(string); i++) {
 		if (in(*(string+i), globbing_symbols)) {
@@ -188,6 +183,6 @@ struct StringNode * expand_string(const char* const string) {
 	}
 
 	sa_edit_prepend_all(matches, det_path);
-	
+
 	return matches;
 }

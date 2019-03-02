@@ -96,4 +96,13 @@
 	}\
 }
 
+#define assert_not_null(P) {\
+	if (P == NULL) {\
+		__explanation_separator();\
+		printf("Expected NOT NULL\n");\
+		printf("Line: %d - %s\n",__LINE__, __FILE__);\
+		__explanation_separator();\
+	}\
+}
+
 #endif

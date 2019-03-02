@@ -20,14 +20,11 @@ void testRootPathFromActualPathWithGlobbingSymbols() {
 }
 
 void testExpandString() {
-	struct StringNode* node = expand_string("/Users/h3xept/Desktop/Uni_Drive/Year 2/Sem_2/CS210/ACE4/Ba*");
-
-	while(node) {
-		printf("%s\n",node->data);
-		node = node->next;
-	}
-
+	struct StringNode* node = expand_string("/Users/h3xept/Desktop/Uni_Drive/Year 2/Sem_2/CS210/ACE4/Ba*/", NULL);
+	struct StringNode* curr = node;
+	#warning NO ASSERT
 }
+
 
 void testStringComponents() {
 	struct StringComponents* components = components_with_globbing_symbol_index("leo*isglobbing",3);
