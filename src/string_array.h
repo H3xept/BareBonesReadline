@@ -1,8 +1,6 @@
 #ifndef __STRING_ARRAY__
 #define __STRING_ARRAY__
 
-typedef int Function ();
-
 struct StringNode {
 	char* data;
 	struct StringNode* next;
@@ -16,5 +14,5 @@ void sa_destroy(struct StringNode* head);
 void sa_edit(struct StringNode* head, char* search_data, char* new_data);
 void sa_remove(struct StringNode** head, char* data);
 void sa_edit_prepend_all(struct StringNode* head, const char* const prep_string);
-
+char* sa_concat(struct StringNode* head, char symbol);
 #endif

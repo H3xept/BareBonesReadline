@@ -13,6 +13,7 @@
 #include "ctrl.h"
 #include "keymapper.h"
 #include "handlers.h"
+#include "globbing/globber.h"
 
 #define MAX_INPUT_BUFFER_SIZE 500
 
@@ -141,7 +142,8 @@ void register_handlers() {
 }
 
 char* parse_line(char* line) {
-	return line;
+	struct StringNode* node = expand_string(line);
+	return sa_concat(node, ' ');
 }
 
 char* read_line(const char* const prompt) {

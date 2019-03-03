@@ -8,6 +8,7 @@ void testMiddleInsert();
 void testSearch();
 void testRemove();
 void testPrependAll();
+void testToString();
 void testedit();
 void teardown();
 #endif

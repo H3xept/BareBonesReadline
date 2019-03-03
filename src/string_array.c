@@ -112,3 +112,37 @@ void sa_edit_prepend_all(struct StringNode* head, const char* const prep_string)
 		current = current->next;
 	}
 }
+
+static int number_of_strings(struct StringNode* head) {
+	int ret = 0;
+	struct StringNode* curr = head;
+	while(curr) {
+		ret++;
+		curr = curr->next;
+	}
+	return ret;
+}
+
+char* sa_concat(struct StringNode* head, char symbol) {
+	char* ret_str = NULL;
+	struct StringNode* curr = head;
+	while(curr) {
+		int has_next = (curr->next != NULL);
+		if (!ret_str) {
+			ret_str = calloc(strlen(curr->data)+1+has_next, sizeof(char));
+			strcpy(ret_str, curr->data);
+			if (has_next) {
+				*(ret_str+strlen(curr->data)) = symbol;
+			}
+		} else {
+			size_t ret_str_len = strlen(ret_str);
+			ret_str = realloc(ret_str, (strlen(ret_str)+strlen(curr->data)+1+has_next)*sizeof(char));
+			strcat(ret_str, curr->data);
+			if (has_next) {
+				*(ret_str+ret_str_len+strlen(curr->data)) = symbol;
+			}
+			*(ret_str+ret_str_len+strlen(curr->data)+has_next) = '\0';
+		}
+		curr = curr->next;
+	} return ret_str;
+}

@@ -68,3 +68,11 @@ void testPrependAll() {
 	assert_eq_str(head->data, "path/Hello");
 	assert_eq_str(head->next->data, "path/mighty");
 }
+
+void testToString() {
+	struct StringNode* new_node = sa_new("world");
+	sa_add(head, new_node);
+	new_node = sa_new("!");
+	sa_add(head->next, new_node);
+	assert_eq_str("Hello world !",sa_concat(head, ' '));
+}
