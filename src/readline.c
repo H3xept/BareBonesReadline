@@ -142,7 +142,7 @@ void register_handlers() {
 }
 
 char* parse_line(char* line) {
-	struct StringNode* node = expand_string(line);
+	struct StringNode* node = glob(line);
 	return sa_concat(node, ' ');
 }
 
@@ -166,11 +166,13 @@ char* read_line(const char* const prompt) {
 		switch(handle_input()) {
 			reset_termios_data();
 			case ASCII_ENTER:
-				return g_line->buffer;
+				goto break_while;
 			case ASCII_CONTROL_C:
 				return "";
 		}redraw_line(prompt);
 	}
+
+break_while:
 
 	returned_string = g_line->buffer;
 
@@ -183,6 +185,7 @@ char* read_line(const char* const prompt) {
 
 void init_readline(void) {
 	register_handlers();
+	initialised = 1;
 }
 
 void teardown_readline(void) {

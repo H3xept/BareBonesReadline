@@ -28,7 +28,7 @@ def run_tests_for_file(filename):
 	print("Running...")
 	ret = os.system(f"./run_test")
 
-	# os.system("rm run_test temp_test.c")
+	os.system("rm run_test temp_test.c")
 
 	return ret
 

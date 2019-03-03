@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall --pedantic --std=c99
 SOURCE_FOLDER = src
 OUT_FOLDER = bin
-SOURCE_FILES = $(SOURCE_FOLDER)/*.c
+SOURCE_FILES = $(SOURCE_FOLDER)/*.c $(SOURCE_FOLDER)/globbing/*.c
 LIB_NAME = libreadline.a
 DEPENDENCIES_FOLDER = dependencies
 

@@ -243,8 +243,23 @@ struct StringNode * expand_string(const char* const string) {
 	if (to_glob) {
 		 wildcardPath = wp_new(to_glob);
 		 filter_wildcards(wildcardPath);
+		 sa_edit_prepend_all(matches, det_path);
 	}
 
-	sa_edit_prepend_all(matches, det_path);
+	if (!matches) matches = sa_new((char*)string);
 	return matches;
+}
+
+static unsigned int contains_globbing_symbols(const char* const string) {
+	for (int i = 0; i < strlen(string); i++) {
+		if (in(*(string+i), globbing_symbols)) {
+			return 1;
+		}
+	} return 0;
+}
+
+struct StringNode * glob(const char* const string) {
+	if (contains_globbing_symbols(string)) {
+		return expand_string(string);
+	} return sa_new((char*)string);
 }

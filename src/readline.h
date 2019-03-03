@@ -3,7 +3,7 @@
 
 void init_readline(void);
 void teardown_readline(void);
-char* read_line(char* prompt);
+char* read_line(const char* const prompt);
 char* parse_line(char* line);
 void add_history(char* command);
 char** get_history(void);
