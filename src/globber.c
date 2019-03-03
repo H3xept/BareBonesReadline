@@ -4,39 +4,12 @@
 #include <stdio.h>
 #include <dirent.h> 
 
+#include "wildcard_path.h"
 #include "globber.h"
 
 static char globbing_symbols[] = {'*','?'};
-static struct StringNode* matches;
-
-static struct StringNode * resources_in_dir(const char* const det_path) {
-	struct StringNode* resources = NULL;
-	struct dirent *entry;
-
-    DIR *dir = opendir(det_path);
-    
-    if (dir == NULL) {
-    	return NULL;
-    } 
-
-    while((entry = readdir(dir)) != NULL) {
-    	char* res_name = entry->d_name;
-
-    	if (!strcmp(res_name,".") || !strcmp(res_name, "..")) {
-    		continue;
-    	}
-
-    	if (!resources) {
-    		resources = sa_new(res_name);
-    	} else {
-    		sa_add_new(resources, res_name);
-    	}
-
-    } closedir(dir);
-
-    free(entry);
-    return resources;
-}
+static struct StringNode* matches = NULL;
+static const char* det_path = NULL;
 
 // Check if char c is in charset c_set
 static unsigned int in(char c, char* c_set) {
@@ -45,144 +18,233 @@ static unsigned int in(char c, char* c_set) {
 	} return 0;
 }
 
-struct StringComponents * components_with_globbing_symbol_index(const char* const string, int index) {
-	struct StringComponents* ret = calloc(1, sizeof(struct StringComponents));
-	char* before_gs = calloc(index+1, sizeof(char));
-	char* after_gs = calloc(strlen(string)-index, sizeof(char));
+static struct StringNode * resources_in_dir(const char* const path) {
+	struct StringNode* resources = NULL;
+	struct dirent *entry = NULL;
 
-	for (int i = 0; i < index; i++) {
-		*(before_gs+i) = *(string+i);
-	}
+    DIR *dir = opendir((path) ? path : "./");
 
-	for (int i = index+1; i < strlen(string); i++) {
-		if (*(string+i) == '/')
-			break;
-		*(after_gs+i-index-1) = *(string+i);
-	}
+    if (dir == NULL) {
+    	return NULL;
+    } 
 
-	before_gs = realloc(before_gs, strlen(before_gs));
-	after_gs = realloc(after_gs, strlen(after_gs));
-	
-	ret->before_gs = before_gs;
-	ret->after_gs = after_gs;
+    while((entry = readdir(dir)) != NULL) {
+    	char* res_name = entry->d_name;
 
-	return ret;
+    	if (!resources) {
+    		resources = sa_new(res_name);
+    	} else {
+    		sa_add_new(resources, res_name);
+    	} 
+
+    } closedir(dir);
+
+    return resources;
 }
 
 char* last_determinisitc_path_for_string(const char* const string) {
 	assert(string);
 	
 	int gc_index = strlen(string);
-	char* path = calloc(strlen(string), sizeof(char));
+	char* path = calloc(strlen(string)+1, sizeof(char));
 
 	for (int i = 0; i < strlen(string); i++) {
 		if (in(*(string+i),globbing_symbols)) {
 			gc_index = i;
+			break;
 		}
 	} 
 
-	memcpy(path, string, gc_index+1);
-
-	for (int i = strlen(path); i > 0; i--) {
+	memcpy(path, string, gc_index);
+	for (int i = gc_index-1; i >= 0; i--) {
 		if (*(path+i) == '/') {
 			*(path+i+1) = '\0';
-			path = realloc(path, strlen(path));
+			path = realloc(path, strlen(path)+1);
 			return path;
 		}
-	} free(path);
+	} 
+
+	if (path)
+		free(path);
 	return NULL;
 }
 
-static void filter_files_starting_with(char* sstring) {
-	struct StringNode* current = matches;
-	while(current != NULL) {
-		char* str = current->data;
-		if (string_starts_with(str, sstring)) {
-			current = current->next;
-			continue;
-		} sa_remove(&matches, str);
-		current = current->next;
-	}
-}
-
-static void filter_files_ending_with(char* estring) {
-	struct StringNode* current = matches;
-	while(current != NULL) {
-		char* str = current->data;
-		if (string_ends_with(str, estring)) {
-			current = current->next;
-			continue;
-		} sa_remove(&matches, str);
-		current = current->next;
-	}
-}
-
-static void hanlde_question_mark(char* before_gs) {
-	int before_gs_len = (before_gs) ? strlen(before_gs) : 0;
-	struct StringNode* current = matches;
-	while(current != NULL) {
-		char* str = current->data;
-		if (strlen(str) >= before_gs_len+1) {
-			current = current->next;
-			continue;
-		} sa_remove(&matches, str);
-		current = current->next;
-	}
-}
-
-static struct StringNode * glob_chain(const char* const string,
-						 const char* const det_path, 
-						 unsigned int gs_index) {
-
-	if (!matches) {
-		struct StringNode* nodes = resources_in_dir(det_path);
-		matches = nodes;
-	}
-
-	struct StringComponents* components = components_with_globbing_symbol_index(string, gs_index);
-	
-	if (components->before_gs != NULL) {
-		filter_files_starting_with(components->before_gs);
-		if (matches == NULL) { return NULL; }
-	}
-
-	switch(*(string+gs_index)){
-		case '*':
+static unsigned int index_of_last_slash(char* string) {
+	assert(string);
+	unsigned int index = strlen(string);
+	for (; index > 0; index--) {
+		if (*(string+index) == '/') {
 			break;
-		case '?':
-			hanlde_question_mark(components->before_gs);
-			break;
-	}
-
-	if (components->after_gs != NULL) {
-		filter_files_ending_with(components->after_gs);
-		if (matches == NULL) { return NULL; }
-	}
-
-	return matches;
+		}
+	} return index;
 }
 
-struct StringNode * expand_string(const char* const string, struct StringNode* local_matches) {
+static void filter_files_containing_s_at_index(char* substr, 
+											   unsigned int index) {
+	if (!substr) { return; }
+
+	struct StringNode* current = matches;
+	size_t substr_len = strlen(substr);
+
+	while(current != NULL) {
+		char* str = current->data + index_of_last_slash(current->data);
+		size_t str_len = strlen(str);
+
+		if ( (index > str_len | index+substr_len-1 > str_len) || 
+			strncmp((str + index), substr, substr_len) ) {
+			sa_remove(&matches, str);
+		}
+		current = current->next;
+		continue;
+	}
+}
+
+static void filter_files_containing_s_after_index(char* substr, 
+											   	  unsigned int index) {
+	if (!substr) { return; }
+
+	struct StringNode* current = matches;
+	size_t substr_len = strlen(substr);
+
+	while(current != NULL) {
+		char* str = current->data + index_of_last_slash(current->data);
+		size_t str_len = strlen(str);
+
+		if ( (index > str_len | index+substr_len-1 > str_len) || 
+			!(strstr((str+index), substr)) ) {
+			sa_remove(&matches, str);
+		}
+		current = current->next;
+		continue;
+	}
+}
+
+static void hanlde_question_mark(unsigned int cur_len) {
+
+	struct StringNode* current = matches;
+
+	while(current != NULL) {
+		char* str = current->data + index_of_last_slash(current->data);
+		size_t str_len = strlen(str);
+
+		if (str_len < cur_len+1) {
+			sa_remove(&matches, str);
+		}
+		current = current->next;
+		continue;
+	}
+}
+
+static inline void filter_with_string(const WildcardString* const string) {
+	assert(string);
+
+	void (*static_filter)(char*, unsigned int) = (string->index >= 0) ?
+		filter_files_containing_s_at_index:
+		filter_files_containing_s_after_index;
+	static_filter(string->before_gs, abs(string->index));
+
+	char* gs = string->gs;
+	if (gs) {
+		switch(*gs) {
+			case '*':
+				break;
+			case '?':
+				hanlde_question_mark(string->index+strlen(string->before_gs));
+				break;
+		}
+	}
+
+	if (string->next) filter_with_string(string->next);
+}
+
+static void filter_replace_with_dir_contents() {
+
+	if (!matches) { return; }
+
+	struct StringNode* repl_matches = NULL;
+	struct StringNode* current = matches;
+
+	while(current) {
+		assert(current->data);
+		if (!strcmp(current->data, ".") || !strcmp(current->data, "..")) {
+			goto next_loop;
+		}
+
+		struct StringNode* new_matches = NULL;
+		size_t c_data_len = strlen(current->data);
+		size_t det_path_len = strlen(det_path);
+
+		char* new_subpath = calloc(c_data_len+2, sizeof(char));
+		strcpy(new_subpath, current->data);
+		*(new_subpath+c_data_len) = '/';
+
+		char* full_path = calloc(det_path_len+c_data_len+1, sizeof(char));
+		strcpy(full_path, det_path);
+		strcat(full_path, current->data);
+
+		new_matches = resources_in_dir(full_path);
+		sa_edit_prepend_all(new_matches, new_subpath);
+
+		if (!repl_matches) {
+			repl_matches = new_matches;
+		} else {
+			sa_add(repl_matches, new_matches);
+		}
+
+		if (full_path)
+			free(full_path);
+		full_path = 0;
+
+		if (new_subpath)
+			free(new_subpath);
+
+next_loop: 
+		current = current->next;
+
+	} if (repl_matches) { sa_destroy(matches); }
+
+	matches = repl_matches;
+}
+
+static inline void filter_wildcards(const WildcardPath* const wildcard) {
+	assert(wildcard);
+
+	filter_with_string(wildcard->wstring);
+	WildcardPath* next = wildcard->next;
+
+	if (next) {
+		filter_replace_with_dir_contents();
+		if (next->wstring) {
+			filter_wildcards(next);
+		}
+	}
+}
+
+struct StringNode * expand_string(const char* const string) {
 
 	assert(string);
-	struct StringNode* ret;
-	const char* const det_path = last_determinisitc_path_for_string(string);
-	size_t det_path_len = strlen(det_path);
 
 	if (matches) {
 		sa_destroy(matches);
 		matches = 0;
-	} matches = local_matches;
+	}
 
-	for (int i = strlen(det_path); i < strlen(string); i++) {
-		if (in(*(string+i), globbing_symbols)) {
-			const char* const to_glob = string+det_path_len;
-			glob_chain(to_glob, det_path, i-det_path_len);
-			break;
-		}
+	if (det_path) {
+		det_path = NULL;
+	}
+
+	det_path = last_determinisitc_path_for_string(string);
+	size_t det_path_len = det_path ? strlen(det_path) : 0;
+	
+	const char* const to_glob = (strlen(string) == det_path_len) ? NULL : string+det_path_len;
+	WildcardPath* wildcardPath;
+	matches = resources_in_dir(det_path);
+
+	if (to_glob) {
+		 wildcardPath = wp_new(to_glob);
+		 filter_wildcards(wildcardPath);
 	}
 
 	sa_edit_prepend_all(matches, det_path);
-
 	return matches;
 }

@@ -3,6 +3,8 @@
 
 void setup();
 void testCreateWildcardPath();
+void testCreateWildcardPathEndingSlash();
+void testCreateOnlyWildcardsPath();
 void teardown();
 
 #endif

@@ -68,8 +68,3 @@ void testPrependAll() {
 	assert_eq_str(head->data, "path/Hello");
 	assert_eq_str(head->next->data, "path/mighty");
 }
-
-void testStringEndsWith() {
-	char str[] = "HelloWorld";
-	assert_true(string_ends_with(str, "World"));
-}

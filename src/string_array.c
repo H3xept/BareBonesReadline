@@ -6,12 +6,16 @@
 
 struct StringNode * sa_new(char* data) {
 	struct StringNode* node = calloc(1, sizeof(struct StringNode));
-	node->data = data;
+	node->data = calloc(strlen(data)+1, sizeof(char));
+	strcpy(node->data, data);
 	node->next = NULL;
 	return node;
 }
 
 void sa_add(struct StringNode* head, struct StringNode* new_node) {
+	assert(head);
+	if (!new_node) { return; }
+
 	if (head->next == NULL) {
 		head->next = new_node;
 	} else {
@@ -59,7 +63,14 @@ void sa_add_new(struct StringNode* head, char* data) {
 void sa_edit(struct StringNode* head, char* search_data, char* new_data) {
 	struct StringNode* node = sa_search(head, search_data);
 	assert(node);
-	node->data = new_data;
+	
+	if (node->data) {
+		free(node->data);
+		node->data = 0;
+	}
+	
+	node->data = calloc(strlen(new_data)+1, sizeof(char));
+	strcpy(node->data, new_data);
 }
 
 void sa_remove(struct StringNode** head, char* data) {
@@ -81,6 +92,7 @@ void sa_remove(struct StringNode** head, char* data) {
 }
 
 void sa_edit_prepend_all(struct StringNode* head, const char* const prep_string) {
+	if (!prep_string) return;
 	struct StringNode* current = head;
 	while(current != NULL) {
 
@@ -99,20 +111,4 @@ void sa_edit_prepend_all(struct StringNode* head, const char* const prep_string)
 
 		current = current->next;
 	}
-}
-
-// String utilities 
-
-int string_starts_with(char* str, char* prefix) {
-	assert(str && prefix);
-	size_t str_len = strlen(str);
-	size_t prefix_len = strlen(prefix);
-	return str_len < prefix_len ? 0 : !strncmp(str, prefix, prefix_len);
-}
-
-int string_ends_with(char* str, char* suffix) {
-	assert(str && suffix);
-	size_t str_len = strlen(str);
-	size_t suffix_len = strlen(suffix);
-	return str_len < suffix_len ? 0 : !strcmp(str+str_len-suffix_len, suffix);
 }

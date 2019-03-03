@@ -10,7 +10,8 @@ static const char* const PATH_DIVIDER = "/\0";
 WildcardPath* wp_new(const char* const string) {
 	assert(string);
 
-	char* _string = calloc(strlen(string)+1, sizeof(char));
+	size_t string_len = strlen(string);
+	char* _string = calloc(string_len+1, sizeof(char));
 	strcpy(_string, string);
 
 	WildcardPath* head = NULL;
@@ -22,10 +23,19 @@ WildcardPath* wp_new(const char* const string) {
 	while(substr) {
 		if (next) { temp = next; }
 		next = calloc(1, sizeof(WildcardPath));
+		next->next = NULL;
 		if (temp) { temp->next = next; }
 		if (!head) { head = next; }
-		next->wstring = ws_new(substr);
+		next->wstring = ws_new(substr,0);
 		substr = strtok(NULL, PATH_DIVIDER);
+	}
+
+	if (*(string+string_len-1) == '/' && next) {
+		temp = next;
+		next = calloc(1, sizeof(WildcardPath));
+		temp->next = next;
+		next->wstring = NULL;
+		next->next = NULL;
 	}
 
 	free(_string);

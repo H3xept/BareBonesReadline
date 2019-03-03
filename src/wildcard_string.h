@@ -4,9 +4,10 @@
 typedef struct _WildcardString {
 	char* before_gs;
 	char* gs;
+	int index;
 	struct _WildcardString* next;
 } WildcardString;
 
-WildcardString* ws_new(const char* const string);
+WildcardString* ws_new(const char* const string, const int index);
 
 #endif

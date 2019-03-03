@@ -17,7 +17,4 @@ void sa_edit(struct StringNode* head, char* search_data, char* new_data);
 void sa_remove(struct StringNode** head, char* data);
 void sa_edit_prepend_all(struct StringNode* head, const char* const prep_string);
 
-int string_starts_with(char* str, char* prefix);
-int string_ends_with(char* str, char* suffix);
-
 #endif

@@ -12,29 +12,40 @@ static unsigned int in(char c, char* c_set) {
 	} return 0;
 }
 
-WildcardString* ws_new(const char* const string) {
+WildcardString* ws_new(const char* const string, const int index) {
 
-	if (!string) return NULL;
+	if (!string || *string == '\0') return NULL;
 
 	WildcardString* head = calloc(1, sizeof(WildcardString));
 	head->before_gs = NULL;
 	head->gs = NULL;
+	head->next = NULL;
+	head->index = index;
 
 	char c;
 	unsigned int i = 0;
-	while((c = *(string+(i++)))) {
-		char* before_gs; 
+	while((c = *(string+i))) {
+		char* before_gs = NULL; 
+
+		// GS Found
 		if (in(c, globbing_symbols)) {
 
-			before_gs = calloc(i+2, sizeof(char));
-			memcpy(before_gs, string, i-1);
-			head->before_gs = before_gs;
+			if (i) {
+				before_gs = calloc(i+1, sizeof(char));
+				memcpy(before_gs, string, i);
+				head->before_gs = before_gs;
+			}
+
+			size_t before_gs_len = before_gs ? strlen(before_gs) : 0;
 
 			char* gs = calloc(2, sizeof(char));
-			memcpy(gs, string+i-1, 1);
+			memcpy(gs, string+i, 1);
 			head->gs = gs;
 
-			head->next = ws_new(string+i);
+			int new_index = abs(index)+before_gs_len+1;
+			new_index *= (*gs == '*') ? -1 : 1;
+			
+			head->next = ws_new(string+i+1, new_index);
 
 			break;
 		}
@@ -42,6 +53,7 @@ WildcardString* ws_new(const char* const string) {
 		before_gs = calloc(strlen(string), sizeof(char));
 		strcpy(before_gs, string);
 		head->before_gs = before_gs;
+		i++;
 
 	}
 

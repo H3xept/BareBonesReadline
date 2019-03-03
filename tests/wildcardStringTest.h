@@ -3,6 +3,8 @@
 
 void setup();
 void testCreateWildcardString();
+void testCreateWildcardStringEndingWild();
+void testCreateWildcardStringJustWild();
 void teardown();
 
 #endif

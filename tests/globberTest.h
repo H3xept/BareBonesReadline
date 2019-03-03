@@ -4,9 +4,10 @@
 void setup();
 void testRootPathFromLocalString();
 void testRootPathFromActualPath();
-void testRootPathFromActualPathWithGlobbingSymbols();
+void testRootPathFromActualPathWithStarGlobbingSymbols();
+void testRootPathWithOnlyStarGlobbingSymbols();
+void testQuestionMarkGlobbingSymbol();
 void testExpandString();
-void testStringComponents();
 void teardown();
 
 #endif
