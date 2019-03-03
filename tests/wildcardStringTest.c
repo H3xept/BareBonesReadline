@@ -1,5 +1,5 @@
 #include "wildcardStringTest.h"
-#include "../src/wildcard_string.h"
+#include "../src/globbing/wildcard_string.h"
 #include "macros.h"
 
 void setup() {

@@ -5,13 +5,12 @@
 #include <assert.h>
 #include "globberTest.h"
 #include "macros.h"
-#include "../src/globber.h"
+#include "../src/globbing/globber.h"
 
 #define GLOBBER_TEST_FOLDER "/var/tmp/globberTest"
+#define GLOBBER_TEST_SUBFOLDER "/var/tmp/globberTest/subfolder"
 #define test_file "/test.txt"
 #define test_file2 "/wow.c"
-
-#define GLOBBER_TEST_SUBFOLDER "/var/tmp/globberTest/subfolder"
 
 static int assert_contains_str(struct StringNode* head, char* str) {
 	struct StringNode* curr = head;
