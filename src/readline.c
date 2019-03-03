@@ -13,12 +13,14 @@
 #include "ctrl.h"
 #include "keymapper.h"
 #include "handlers.h"
+#include "globbing/globber.h"
 
 #define MAX_INPUT_BUFFER_SIZE 500
 
 Line* g_line;
 struct KeyMap* g_head;
 
+static int initialised = 0;
 // -- Begin Termios Config --
 
 static struct termios* termios_data = NULL;
@@ -139,10 +141,15 @@ void register_handlers() {
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_RIGHT, h_line_arrow_right); 
 }
 
+char* parse_line(char* line) {
+	struct StringNode* node = glob(line);
+	return sa_concat(node, ' ');
+}
+
 char* read_line(const char* const prompt) {
-	
+		
+	assert(initialised);
 	char* returned_string;
-	register_handlers();
 
 	if (g_line) {
 		free(g_line);
@@ -159,17 +166,28 @@ char* read_line(const char* const prompt) {
 		switch(handle_input()) {
 			reset_termios_data();
 			case ASCII_ENTER:
-				return g_line->buffer;
+				goto break_while;
 			case ASCII_CONTROL_C:
 				return "";
 		}redraw_line(prompt);
 	}
+
+break_while:
 
 	returned_string = g_line->buffer;
 
 	free(g_line);
 	g_line = 0;
 
-	return returned_string;
+	return parse_line(returned_string);
 }
 // -- End Input Handling
+
+void init_readline(void) {
+	register_handlers();
+	initialised = 1;
+}
+
+void teardown_readline(void) {
+	km_destroy(g_head);	
+}

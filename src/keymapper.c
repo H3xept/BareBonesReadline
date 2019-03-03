@@ -37,6 +37,7 @@ struct KeyMap * km_search(struct KeyMap* node, int key) {
 }
 
 void km_destroy(struct KeyMap* head) {
+	assert(head);
 	struct KeyMap* current_node = head;
 	do {
 		struct KeyMap* tmp = current_node->next;
