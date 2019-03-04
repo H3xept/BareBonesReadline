@@ -13,7 +13,7 @@
 #include "ctrl.h"
 #include "keymapper.h"
 #include "handlers.h"
-#include "globbing/globber.h"
+#include "globber.h"
 
 #define MAX_INPUT_BUFFER_SIZE 500
 

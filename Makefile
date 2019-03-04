@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall --pedantic --std=c99
 SOURCE_FOLDER = src
 OUT_FOLDER = bin
-SOURCE_FILES = $(SOURCE_FOLDER)/*.c $(SOURCE_FOLDER)/globbing/*.c
+SOURCE_FILES = $(SOURCE_FOLDER)/*.c
 LIB_NAME = libreadline.a
 DEPENDENCIES_FOLDER = dependencies
 
@@ -39,7 +39,7 @@ compile_dylib: taget_dir
 
 copy_headers: taget_dir
 	@ echo "Copying headers..."
-	@ cp $(SOURCE_FOLDER)/**/*.h $(OUT_FOLDER)/headers/
+	@ cp $(SOURCE_FOLDER)/*.h $(OUT_FOLDER)/headers/
 
 taget_dir:
 	@ echo "Creating folder structure..."

@@ -5,7 +5,7 @@
 #include <assert.h>
 #include "globberTest.h"
 #include "macros.h"
-#include "../src/globbing/globber.h"
+#include "../src/globber.h"
 
 #define GLOBBER_TEST_FOLDER "/var/tmp/globberTest"
 #define GLOBBER_TEST_SUBFOLDER "/var/tmp/globberTest/subfolder"

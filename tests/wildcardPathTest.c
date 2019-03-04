@@ -1,5 +1,5 @@
 #include "wildcardPathTest.h"
-#include "../src/globbing/wildcard_path.h"
+#include "../src/wildcard_path.h"
 #include "macros.h"
 
 void setup() {
