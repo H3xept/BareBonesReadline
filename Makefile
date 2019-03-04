@@ -39,7 +39,7 @@ compile_dylib: taget_dir
 
 copy_headers: taget_dir
 	@ echo "Copying headers..."
-	@ cp $(SOURCE_FOLDER)/*.h $(OUT_FOLDER)/headers/
+	@ cp $(SOURCE_FOLDER)/**/*.h $(OUT_FOLDER)/headers/
 
 taget_dir:
 	@ echo "Creating folder structure..."
