@@ -1,7 +1,7 @@
 #ifndef __READLINE__
 #define __READLINE__
 
-void init_readline(void);
+void init_readline(int* is_done_ptr);
 void teardown_readline(void);
 char* read_line(const char* const prompt);
 char* parse_line(char* line);
