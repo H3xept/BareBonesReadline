@@ -19,6 +19,7 @@
 
 Line* g_line;
 struct KeyMap* g_head;
+static int* is_done;
 
 static int initialised = 0;
 // -- Begin Termios Config --
@@ -138,7 +139,7 @@ void register_handlers() {
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_UP, h_line_arrow_up); 
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_DOWN, h_line_arrow_down);  
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_LEFT, h_line_arrow_left);
-	km_add_new(g_head, KEYMAP_HANDLE_ARROW_RIGHT, h_line_arrow_right); 
+	km_add_new(g_head, KEYMAP_HANDLE_ARROW_RIGHT, h_line_arrow_right);
 }
 
 char* parse_line(char* line) {
@@ -167,8 +168,12 @@ char* read_line(const char* const prompt) {
 			reset_termios_data();
 			case ASCII_ENTER:
 				goto break_while;
+				break;
 			case ASCII_CONTROL_C:
 				return "";
+			case ASCII_CONTROL_D:
+				*is_done = 1;
+				break;
 		}redraw_line(prompt);
 	}
 
@@ -181,9 +186,11 @@ break_while:
 
 	return parse_line(returned_string);
 }
+
 // -- End Input Handling
 
-void init_readline(void) {
+void init_readline(int* is_done_ptr) {
+	is_done = is_done_ptr;
 	register_handlers();
 	initialised = 1;
 }

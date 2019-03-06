@@ -32,7 +32,7 @@ prepare_dependencies:
 
 compile_dylib: taget_dir 
 	@ echo "Compiling dylib..."
-	@ $(CC) -I$(DEPENDENCIES_FOLDER) $(CFLAGS) $(SOURCE_FILES) -c $(DEPENDENCIES_FOLDER)/libs/*.a
+	@ $(CC) -I$(DEPENDENCIES_FOLDER) $(CFLAGS) $(SOURCE_FILES) -c 
 	@ ar rs $(LIB_NAME) *.o
 	@ cp $(LIB_NAME) bin/libs
 	@ rm *.o $(LIB_NAME)
