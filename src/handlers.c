@@ -7,6 +7,7 @@
 #include "line_tools.h"
 
 extern Line* g_line;
+extern int* is_done;
 
 int h_line_backspace() {
 	com_backspace(g_line->buffer, &g_line->cursor_location);
@@ -46,6 +47,11 @@ int h_line_arrow_right() {
 }
 
 int h_control_c() {
+	printf("\n");
+	return 0;
+}
+
+int h_control_d() {
 	printf("\n");
 	return 0;
 }

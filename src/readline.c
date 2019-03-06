@@ -135,6 +135,7 @@ void register_handlers() {
 	 */
 
 	km_add_new(g_head, ASCII_CONTROL_C, h_control_c);
+	km_add_new(g_head, ASCII_CONTROL_D, h_control_d);
 	km_add_new(g_head, ASCII_ENTER, h_enter);
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_UP, h_line_arrow_up); 
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_DOWN, h_line_arrow_down);  
@@ -173,7 +174,7 @@ char* read_line(const char* const prompt) {
 				return "";
 			case ASCII_CONTROL_D:
 				*is_done = 1;
-				break;
+				return "";
 		}redraw_line(prompt);
 	}
 
