@@ -291,7 +291,9 @@ char* glob_line(const char* const string) {
 
 	globbed_line = sa_concat(globbed, SUBSTR_SEPARATOR);
 
-	sa_destroy(globbed);
+	if(globbed){
+		sa_destroy(globbed);
+	}
 	destroy_tokenizer(tokenizer);
 	return globbed_line;
 }
