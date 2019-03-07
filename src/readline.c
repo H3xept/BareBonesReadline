@@ -144,8 +144,7 @@ void register_handlers() {
 }
 
 char* parse_line(char* line) {
-	struct StringNode* node = glob(line);
-	return sa_concat(node, ' ');
+	return glob_line(line);
 }
 
 char* read_line(const char* const prompt) {

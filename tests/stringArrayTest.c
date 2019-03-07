@@ -76,3 +76,12 @@ void testToString() {
 	sa_add(head->next, new_node);
 	assert_eq_str("Hello world !",sa_concat(head, ' '));
 }
+
+void testAppend() {
+	struct StringNode* new_node = sa_new("world");
+	sa_append(head, new_node);
+	new_node = sa_new("!");
+	sa_append(head, new_node);
+	assert_eq_str(head->next->data, "world");
+	assert_eq_str(head->next->next->data, "!");
+}

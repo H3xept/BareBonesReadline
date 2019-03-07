@@ -57,6 +57,7 @@
 		printf("Expected %d, got %d \n",NUM1,NUM2);\
 		printf("Line: %d - %s\n",__LINE__, __FILE__);\
 		__explanation_separator();\
+		exit(-1);\
 	}\
 }
 
@@ -66,6 +67,7 @@
 		printf("Expected %f | got %f \n",NUM1,NUM2);\
 		printf("Line: %d - %s\n",__LINE__, __FILE__);\
 		__explanation_separator();\
+		exit(-1);\
 	}\
 }
 
@@ -75,15 +77,23 @@
 		printf("Expected %ld | got %ld \n",NUM1,NUM2);\
 		printf("Line: %d - %s\n",__LINE__, __FILE__);\
 		__explanation_separator();\
+		exit(-1);\
 	}\
 }
 
 #define assert_eq_str(S1, S2) {\
+	if ((S1) == NULL || (S2) == NULL) {\
+		__explanation_separator();	\
+		printf("One of the passed strings is NULL!\n");\
+		__explanation_separator();	\
+		exit(-1);\
+	} else\
 	if (strcmp(S1,S2)) {\
 		__explanation_separator();\
 		printf("Expected %s | got %s \n",S1,S2);\
 		printf("Line: %d - %s\n",__LINE__, __FILE__);\
 		__explanation_separator();\
+		exit(-1);\
 	}\
 }
 
@@ -93,6 +103,7 @@
 		printf("Expected NULL\n");\
 		printf("Line: %d - %s\n",__LINE__, __FILE__);\
 		__explanation_separator();\
+		exit(-1);\
 	}\
 }
 
@@ -102,6 +113,7 @@
 		printf("Expected NOT NULL\n");\
 		printf("Line: %d - %s\n",__LINE__, __FILE__);\
 		__explanation_separator();\
+		exit(-1);\
 	}\
 }
 

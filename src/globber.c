@@ -6,13 +6,14 @@
 
 #include "wildcard_path.h"
 #include "globber.h"
+#include "tokenizer.h"
 
 static char globbing_symbols[] = {'*','?'};
 static struct StringNode* matches = NULL;
 static const char* det_path = NULL;
 
 // Check if char c is in charset c_set
-static unsigned int in(char c, char* c_set) {
+static unsigned int in(const char c, const char* const c_set) {
 	for (int i = 0; i < strlen(globbing_symbols); i++) {
 		if (globbing_symbols[i] == c) return 1;
 	} return 0;
@@ -225,8 +226,7 @@ struct StringNode * expand_string(const char* const string) {
 	assert(string);
 
 	if (matches) {
-		sa_destroy(matches);
-		matches = 0;
+		matches = NULL;
 	}
 
 	if (det_path) {
@@ -237,7 +237,7 @@ struct StringNode * expand_string(const char* const string) {
 	size_t det_path_len = det_path ? strlen(det_path) : 0;
 	
 	const char* const to_glob = (strlen(string) == det_path_len) ? NULL : string+det_path_len;
-	WildcardPath* wildcardPath;
+	WildcardPath* wildcardPath = NULL;
 	matches = resources_in_dir(det_path);
 
 	if (to_glob) {
@@ -246,7 +246,10 @@ struct StringNode * expand_string(const char* const string) {
 		 sa_edit_prepend_all(matches, det_path);
 	}
 
-	if (!matches) matches = sa_new((char*)string);
+	if (!matches) {
+		matches = sa_new(string);
+	}
+
 	return matches;
 }
 
@@ -258,8 +261,37 @@ static unsigned int contains_globbing_symbols(const char* const string) {
 	} return 0;
 }
 
-struct StringNode * glob(const char* const string) {
+static struct StringNode * glob(const char* const string) {
+	assert(string);
 	if (contains_globbing_symbols(string)) {
 		return expand_string(string);
-	} return sa_new((char*)string);
+	} return sa_new(string);
+}
+
+char* glob_line(const char* const string) {
+	#define SUBSTR_SEPARATOR ' '
+	
+	char* globbed_line = NULL;
+	assert(string);
+	char* to_glob = calloc(strlen(string)+1, sizeof(char));
+	strcpy(to_glob, string);
+	Tokenizer* tokenizer = new_tokenizer(to_glob, SUBSTR_SEPARATOR);
+	struct StringNode* globbed = NULL;
+	
+	char* token = NULL;
+	while((token = next_token(tokenizer))) {
+		struct StringNode* nodes = glob(token);
+		if (!globbed) {
+			globbed = nodes;
+		} else {
+			sa_append(globbed, nodes);
+		}
+		free(token);
+	}
+
+	globbed_line = sa_concat(globbed, SUBSTR_SEPARATOR);
+
+	sa_destroy(globbed);
+	destroy_tokenizer(tokenizer);
+	return globbed_line;
 }

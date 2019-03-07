@@ -101,6 +101,16 @@ void testExpandString() {
 	assert_true(assert_contains_str(node, GLOBBER_TEST_SUBFOLDER test_file));
 }
 
+void testExpandNonExpandableString() {
+	struct StringNode* node = NULL;
+	node = expand_string("not_existing_file*");
+	assert_eq_str("not_existing_file*", node->data);
+}
+
+void testGlobLineSingleExpand() {
+	char* globbed = glob_line("ls /var/tmp/g* not_expandable*");
+	assert_eq_str("ls /var/tmp/globberTest not_expandable*", globbed);
+}
 
 void teardown() {
 

@@ -4,7 +4,7 @@
 #include "string_array.h"
 
 
-struct StringNode * sa_new(char* data) {
+struct StringNode * sa_new(const char* const data) {
 	struct StringNode* node = calloc(1, sizeof(struct StringNode));
 	node->data = calloc(strlen(data)+1, sizeof(char));
 	strcpy(node->data, data);
@@ -28,7 +28,15 @@ void sa_add(struct StringNode* head, struct StringNode* new_node) {
 	}
 }
 
-struct StringNode * sa_search(struct StringNode* node, char* data) {
+void sa_append(struct StringNode* node, struct StringNode* new_node) {
+	assert(node);
+	if (!new_node) { return; }
+	struct StringNode* current = node;
+	while(current->next != NULL) { current = current->next; }
+	current->next = new_node;
+}
+
+struct StringNode * sa_search(struct StringNode* node, const char* const data) {
 	assert(node);
 	struct StringNode* search_node = node;
 
@@ -54,13 +62,13 @@ void sa_destroy(struct StringNode* head) {
 	head = NULL;
 }
 
-void sa_add_new(struct StringNode* head, char* data) {
+void sa_add_new(struct StringNode* head, const char* const data) {
 	assert(head);
 	struct StringNode* new_node = sa_new(data);
 	sa_add(head, new_node);
 }
 
-void sa_edit(struct StringNode* head, char* search_data, char* new_data) {
+void sa_edit(struct StringNode* head, char* search_data, const char* const new_data) {
 	struct StringNode* node = sa_search(head, search_data);
 	assert(node);
 	
@@ -73,7 +81,7 @@ void sa_edit(struct StringNode* head, char* search_data, char* new_data) {
 	strcpy(node->data, new_data);
 }
 
-void sa_remove(struct StringNode** head, char* data) {
+void sa_remove(struct StringNode** head, const char* const data) {
 	struct StringNode* d_head = *head;
 	assert(d_head && d_head->data);
 	struct StringNode* current = d_head;
@@ -123,7 +131,7 @@ static int number_of_strings(struct StringNode* head) {
 	return ret;
 }
 
-char* sa_concat(struct StringNode* head, char symbol) {
+char* sa_concat(struct StringNode* head, const char symbol) {
 	char* ret_str = NULL;
 	struct StringNode* curr = head;
 	while(curr) {

@@ -9,6 +9,8 @@ void testSearch();
 void testRemove();
 void testPrependAll();
 void testToString();
+void testAppend();
 void testedit();
 void teardown();
+
 #endif

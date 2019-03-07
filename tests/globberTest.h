@@ -8,6 +8,8 @@ void testRootPathFromActualPathWithStarGlobbingSymbols();
 void testRootPathWithOnlyStarGlobbingSymbols();
 void testQuestionMarkGlobbingSymbol();
 void testExpandString();
+void testExpandNonExpandableString();
+void testGlobLineSingleExpand();
 void teardown();
 
 #endif
