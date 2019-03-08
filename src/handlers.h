@@ -14,6 +14,7 @@ int h_line_arrow_up();
 int h_line_arrow_down();
 int h_line_arrow_left();
 int h_line_arrow_right();
+int h_tab();
 int h_control_c();
 int h_control_d();
 int h_enter();

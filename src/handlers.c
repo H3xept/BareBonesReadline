@@ -5,12 +5,13 @@
 #include "handlers.h"
 #include "line.h"
 #include "line_tools.h"
+#include "globber.h"
 
 extern Line* g_line;
 extern int* is_done;
 
 int h_line_backspace() {
-	if (g_line->cursor_location == 0) { return; }
+	if (g_line->cursor_location == 0) { return 0; }
 	com_backspace(g_line->buffer, &g_line->cursor_location);
 	mv_c_hor(-1);
 	return 0;
@@ -59,5 +60,14 @@ int h_control_d() {
 
 int h_enter() {
 	printf("\n");
+	return 0;
+}
+
+int h_tab() {
+	// struct StringNode* completions = expand_string(g_line->buffer);
+	// if (completions) {
+	// 	completions->data
+	// }
+	delete_current_word(g_line->buffer, &g_line->cursor_location);
 	return 0;
 }

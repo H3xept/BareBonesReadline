@@ -15,7 +15,6 @@ char* right_slice_from_cursor(char* const buffer, unsigned int cursor_location) 
 }
 
 void com_backspace(char* const current_buffer, unsigned int* cursor_location) {
-	#define BACKSPACE_ESCAPE '\b'
 	
 	assert(!(*cursor_location < 0));
 	
@@ -38,4 +37,11 @@ void insert_char(char* const current_buffer, unsigned int* cursor_location, cons
 	memcpy(current_buffer + *cursor_location + 1, right_slice, right_slice_len);
 	current_buffer[*cursor_location] = c;
 	*cursor_location += 1;
+}
+
+void delete_current_word(char* current_buffer, unsigned int* cursor_location) {
+	char* start_of_word = 0;
+	while(*cursor_location == 0 || *(current_buffer+*cursor_location-1) != ' ') {
+		*cursor_location--;
+	} *current_buffer = '\0';
 }
