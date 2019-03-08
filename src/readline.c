@@ -8,6 +8,7 @@
 #include <stdarg.h>
 #include <signal.h>
 #include <ANSIsACurse/cursor.h>
+#include <BareBonesHistory/history.h>
 
 #include "line.h"
 #include "ctrl.h"
@@ -20,8 +21,8 @@
 Line* g_line;
 struct KeyMap* g_head;
 static int* is_done;
-
 static int initialised = 0;
+
 // -- Begin Termios Config --
 
 static struct termios* termios_data = NULL;
@@ -144,7 +145,10 @@ void register_handlers() {
 }
 
 char* parse_line(char* line) {
-	return glob_line(line);
+	char* globbed_line = glob_line(line);
+	add_history_entry(globbed_line);
+	#warning wrong!
+	return globbed_line;
 }
 
 char* read_line(const char* const prompt) {
@@ -192,6 +196,7 @@ break_while:
 void init_readline(int* is_done_ptr) {
 	is_done = is_done_ptr;
 	register_handlers();
+	init_history();
 	initialised = 1;
 }
 

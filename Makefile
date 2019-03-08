@@ -10,6 +10,10 @@ ANSI_IS_A_CURSE = ANSIsACurse
 ANSI_IS_A_CURSE_LOCATION = ../$(ANSI_IS_A_CURSE)
 ANSI_IS_A_CURSE_LOCATION_GIT = "https://github.com/H3xept/ANSIsACurse"
 
+HISTORY = BareBonesHistory
+HISTORY_LOCATION = ../$(HISTORY)
+HISTORY_LOCATION_GIT = "https://github.com/H3xept/BareBonesHistory"
+
 all: taget_dir prepare_dependencies test compile_dylib copy_headers
 	
 prepare_dependencies: 
@@ -28,6 +32,28 @@ prepare_dependencies:
 		cp $(ANSI_IS_A_CURSE)/bin/headers/*.h $(DEPENDENCIES_FOLDER)/$(ANSI_IS_A_CURSE)/ ; \
 		cp $(ANSI_IS_A_CURSE)/bin/libs/*.a $(DEPENDENCIES_FOLDER)/libs ; \
 		rm -rf $(ANSI_IS_A_CURSE); \
+	fi;
+	@ if [ ! -d $(DEPENDENCIES_FOLDER)/$(HISTORY) ]; then \
+		make dep_HISTORY; \
+	fi;
+
+
+dep_HISTORY:
+	@ mkdir -p $(DEPENDENCIES_FOLDER)/$(HISTORY)
+	@ if [ -d $(HISTORY_LOCATION) ]; then\
+		echo "Folder found locally, running make..."; \
+		echo "Making $$HISTORY ... "; \
+		make -C $(HISTORY_LOCATION); \
+		cp $(HISTORY_LOCATION)/bin/headers/*.h $(DEPENDENCIES_FOLDER)/$(HISTORY)/ ; \
+		cp $(HISTORY_LOCATION)/bin/libs/*.a $(DEPENDENCIES_FOLDER)/libs ; \
+	else \
+		echo "Fonder not found, cloning ..."; \
+		git clone $(HISTORY_LOCATION_GIT) $(HISTORY); \
+		echo "Making $$HISTORY ..." ; \
+		make -C $(HISTORY); \
+		cp $(HISTORY)/bin/headers/*.h $(DEPENDENCIES_FOLDER)/$(HISTORY)/ ; \
+		cp $(HISTORY)/bin/libs/*.a $(DEPENDENCIES_FOLDER)/libs ; \
+		rm -rf $(HISTORY); \
 	fi;
 
 compile_dylib: taget_dir 
