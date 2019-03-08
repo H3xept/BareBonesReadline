@@ -10,6 +10,7 @@ extern Line* g_line;
 extern int* is_done;
 
 int h_line_backspace() {
+	if (g_line->cursor_location == 0) { return; }
 	com_backspace(g_line->buffer, &g_line->cursor_location);
 	mv_c_hor(-1);
 	return 0;

@@ -128,8 +128,7 @@ void register_handlers() {
 		km_add_new(g_head, ASCII_BACKSPACE, h_line_backspace);
 		km_add_new(g_head, ASCII_DELETE, h_line_backspace);
 	#else
-		km_add_new(g_head, ASCII_BACKSPACE, h_line_backspace);
-		km_add_new(g_head, ASCII_DELETE, h_line_delete);
+		km_add_new(g_head, ASCII_DELETE, h_line_backspace);
 	#endif
 	/*
 	 	End of the trickery

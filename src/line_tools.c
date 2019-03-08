@@ -18,10 +18,6 @@ void com_backspace(char* const current_buffer, unsigned int* cursor_location) {
 	#define BACKSPACE_ESCAPE '\b'
 	
 	assert(!(*cursor_location < 0));
-
-	if (*cursor_location == 0) {
-		return;
-	}
 	
 	char* right_slice = right_slice_from_cursor(current_buffer, *cursor_location);
 	size_t right_slice_len = strlen(right_slice);
