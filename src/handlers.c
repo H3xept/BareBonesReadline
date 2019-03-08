@@ -1,6 +1,7 @@
 #include <ANSIsACurse/cursor.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "handlers.h"
 #include "line.h"
@@ -64,10 +65,11 @@ int h_enter() {
 }
 
 int h_tab() {
-	// struct StringNode* completions = expand_string(g_line->buffer);
-	// if (completions) {
-	// 	completions->data
-	// }
-	delete_current_word(g_line->buffer, &g_line->cursor_location);
+	char* last_word = get_last_word(g_line->buffer, &g_line->cursor_location);
+	if (!last_word) { return 0; }
+	struct StringNode* completion = expand_string(last_word);
+	line_autocomplete_word(g_line, sa_get_shortest(completion));
+	if (last_word) { free(last_word); }
+	if (completion) { sa_destroy(completion); }
 	return 0;
 }

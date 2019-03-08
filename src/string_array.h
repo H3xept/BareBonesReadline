@@ -16,4 +16,5 @@ void sa_edit(struct StringNode* head, char* search_data, const char* const new_d
 void sa_remove(struct StringNode** head, const char* const data);
 void sa_edit_prepend_all(struct StringNode* head, const char* const prep_string);
 char* sa_concat(struct StringNode* head, const char symbol);
+char* sa_get_shortest(const struct StringNode* const head);
 #endif

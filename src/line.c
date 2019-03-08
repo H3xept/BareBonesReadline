@@ -23,3 +23,15 @@ void line_printc(Line* const line, const char c) {
 		insert_char(line->buffer, &line->cursor_location, c);
 	}
 }
+
+void line_printstr(Line* const line, const char* str) {
+	for (int i = 0; i < strlen(str); i++) {
+		line_printc(line, *(str+i));
+	}
+}
+
+void line_autocomplete_word(Line* const line, char* word) {
+	if (!word) { return; }
+	delete_current_word(line->buffer, &line->cursor_location);
+	line_printstr(line, word);
+}

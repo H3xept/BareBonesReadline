@@ -1,3 +1,4 @@
+#include <ANSIsACurse/cursor.h>
 #include "line_tools.h"
 #include <stdio.h>
 #include <string.h>
@@ -39,9 +40,26 @@ void insert_char(char* const current_buffer, unsigned int* cursor_location, cons
 	*cursor_location += 1;
 }
 
+static int chars_to_word_beginning(const char* const current_buffer, const unsigned int* const cursor_location) {
+	int i = 0;
+	while((*cursor_location)-i != 0 && *(current_buffer+(*cursor_location)-i-1) != ' ') {
+		i++;
+	}
+	return i;
+}
+
+char* get_last_word(const char* const current_buffer, const unsigned int* const cursor_location) {
+	size_t w_len = chars_to_word_beginning(current_buffer, cursor_location);
+	if (w_len == 0) { return NULL; }
+	char* word = calloc(w_len+1, sizeof(char));
+	strncpy(word, (current_buffer+((*cursor_location)-w_len)), w_len);
+	return word;
+}
+
 void delete_current_word(char* current_buffer, unsigned int* cursor_location) {
-	char* start_of_word = 0;
-	while(*cursor_location == 0 || *(current_buffer+*cursor_location-1) != ' ') {
-		*cursor_location--;
-	} *current_buffer = '\0';
+	int ct_beginning = chars_to_word_beginning(current_buffer, cursor_location);
+	(*cursor_location)-=ct_beginning;
+	memset((current_buffer+*cursor_location),'\0',ct_beginning);
+	if (ct_beginning > 0)
+		mv_c_hor(-ct_beginning);
 }

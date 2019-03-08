@@ -8,6 +8,7 @@
 #define ASCII_BACKSPACE 0x08
 #define ASCII_DELETE 0x7f
 #define ASCII_ENTER 0x0a
+#define ASCII_TAB 0x09
 #define NOP 0x00
 
 #endif

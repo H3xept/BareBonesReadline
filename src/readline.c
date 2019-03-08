@@ -137,6 +137,7 @@ void register_handlers() {
 	km_add_new(g_head, ASCII_CONTROL_C, h_control_c);
 	km_add_new(g_head, ASCII_CONTROL_D, h_control_d);
 	km_add_new(g_head, ASCII_ENTER, h_enter);
+	km_add_new(g_head, ASCII_TAB, h_tab);
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_UP, h_line_arrow_up); 
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_DOWN, h_line_arrow_down);  
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_LEFT, h_line_arrow_left);

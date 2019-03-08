@@ -11,6 +11,7 @@ void testPrependAll();
 void testToString();
 void testAppend();
 void testedit();
+void testShortest();
 void teardown();
 
 #endif

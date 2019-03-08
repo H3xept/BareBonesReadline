@@ -85,3 +85,9 @@ void testAppend() {
 	assert_eq_str(head->next->data, "world");
 	assert_eq_str(head->next->next->data, "!");
 }
+
+void testShortest() {
+	struct StringNode* new_node = sa_new("sh");
+	sa_append(head, new_node);
+	assert_eq_str("sh",sa_get_shortest(head));
+}

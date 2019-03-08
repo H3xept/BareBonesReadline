@@ -154,3 +154,19 @@ char* sa_concat(struct StringNode* head, const char symbol) {
 		curr = curr->next;
 	} return ret_str;
 }
+
+char* sa_get_shortest(const struct StringNode* const head) {
+	assert(head);
+	char* shortest = NULL;
+
+	const struct StringNode* curr = head;
+
+	while(curr) {
+		if (!shortest) {
+			shortest = curr->data;
+		} else if (strlen(shortest) > strlen(curr->data)) {
+			shortest = curr->data;
+		} curr = curr->next;
+	} return shortest;
+
+}
