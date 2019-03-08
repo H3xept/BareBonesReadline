@@ -154,7 +154,6 @@ static inline void filter_with_string(const WildcardString* const string) {
 				break;
 		}
 	}
-
 	if (string->next) filter_with_string(string->next);
 }
 

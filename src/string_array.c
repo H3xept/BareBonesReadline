@@ -3,7 +3,6 @@
 #include <string.h>
 #include "string_array.h"
 
-
 struct StringNode * sa_new(const char* const data) {
 	struct StringNode* node = calloc(1, sizeof(struct StringNode));
 	node->data = calloc(strlen(data)+1, sizeof(char));
@@ -160,7 +159,6 @@ char* sa_get_shortest(const struct StringNode* const head) {
 	char* shortest = NULL;
 
 	const struct StringNode* curr = head;
-
 	while(curr) {
 		if (!shortest) {
 			shortest = curr->data;
@@ -169,4 +167,15 @@ char* sa_get_shortest(const struct StringNode* const head) {
 		} curr = curr->next;
 	} return shortest;
 
+}
+
+int sa_get_size(const struct StringNode* const head) {
+	assert(head);
+	int len = 0;
+
+	const struct StringNode* curr = head;
+	while(curr) {
+		len++;
+		curr = curr->next;
+	} return len;
 }

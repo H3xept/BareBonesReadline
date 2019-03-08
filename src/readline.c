@@ -20,6 +20,7 @@
 
 Line* g_line;
 struct KeyMap* g_head;
+int previous_key = 0x0;
 static int* is_done;
 static int initialised = 0;
 
@@ -110,7 +111,9 @@ int execute_handler(int c) {
 
 int handle_input() {
 	int c = read_character();
-	return execute_handler(c);
+	int ret = execute_handler(c);
+	previous_key = c;
+	return ret;
 }
 
 void register_handlers() {
@@ -177,6 +180,8 @@ char* read_line(const char* const prompt) {
 				return "";
 			case ASCII_CONTROL_D:
 				*is_done = 1;
+				return "";
+			case -3:
 				return "";
 		}redraw_line(prompt);
 	}
