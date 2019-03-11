@@ -76,7 +76,7 @@ int h_tab() {
 	if (previous_key == ASCII_TAB) {
 		if (sa_get_size(completion) > 1) {
 			printf("\n%s\n",sa_concat(completion,' '));
-			ret = -3;
+			ret = -3; // 3, the magic number 🎶
 		} previous_key = 0x0;
 	} else {
 		// Arbitrary value
