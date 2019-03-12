@@ -10,6 +10,7 @@ void testRemove();
 void testPrependAll();
 void testToString();
 void testAppend();
+void testNaiveConcat();
 void testedit();
 void testShortest();
 void teardown();

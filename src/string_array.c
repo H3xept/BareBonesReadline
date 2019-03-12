@@ -130,7 +130,28 @@ static int number_of_strings(struct StringNode* head) {
 	return ret;
 }
 
+static char* naive_concat(struct StringNode* head) {
+	struct StringNode* curr = head;
+	char* ret = NULL;
+	while(curr) {
+		if (!ret) {
+			ret = calloc(strlen(curr->data)+1, sizeof(char));
+			strcpy(ret, curr->data);
+		} else {
+			ret = realloc(ret, strlen(ret)+strlen(curr->data)+1);
+			strcat(ret, curr->data);
+		}
+		curr = curr->next;
+	}
+	return ret;
+}
+
 char* sa_concat(struct StringNode* head, const char symbol) {
+	
+	if (!symbol) {
+		return naive_concat(head);
+	}
+
 	char* ret_str = NULL;
 	struct StringNode* curr = head;
 	while(curr) {

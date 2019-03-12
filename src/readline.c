@@ -146,9 +146,8 @@ void register_handlers() {
 }
 
 char* parse_line(char* line) {
+	
 	char* globbed_line = glob_line(line);
-	add_history_entry(globbed_line);
-	#warning wrong!
 	return globbed_line;
 }
 

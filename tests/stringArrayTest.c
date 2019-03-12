@@ -91,3 +91,9 @@ void testShortest() {
 	sa_append(head, new_node);
 	assert_eq_str("sh",sa_get_shortest(head));
 }
+
+void testNaiveConcat() {
+	struct StringNode* new_node = sa_new("leo");
+	sa_append(head, new_node);
+	assert_eq_str("Helloleo", sa_concat(head, 0));
+}
