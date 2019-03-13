@@ -16,15 +16,15 @@ void teardown() {
 
 void testLastInvocation() {
 	char* test = "!!";
-	assert_eq_str("Entry 1\n", ht_parse(test));
+	assert_eq_str("Entry 1", ht_parse(test));
 }
 
 void testPositiveNumberInvocation() {
 	char* test = "!1";
-	assert_eq_str("Entry 3\n", ht_parse(test));	
+	assert_eq_str("Entry 3", ht_parse(test));	
 }
 
 void testNegativeNumberInvocation() {
 	char* test = "!-1";
-	assert_eq_str("Entry 1\n", ht_parse(test));	
+	assert_eq_str("Entry 1", ht_parse(test));	
 }

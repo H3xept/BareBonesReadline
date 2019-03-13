@@ -46,7 +46,7 @@ static char* ht_invocation_for_substring(const char* const start, int len) {
 	if (!strncmp(start, "!!",len)) {
 		invocation = current_history_entry();
 	} else if (is_requesting_negative_invocation_number(start, len, &num)){
-		invocation = get_history_entry(entries_n()-num);
+		invocation = get_history_entry(entries_n()-num+1);
 	} else if (is_requesting_invocation_number(start, len, &num)) {
 		invocation = get_history_entry(num);
 	}
@@ -54,14 +54,19 @@ static char* ht_invocation_for_substring(const char* const start, int len) {
 	return invocation;
 }
 
-const char* const ht_parse(const char* const line) {
+char* ht_parse(const char* const line) {
 
 	if (!line) { return ""; }
 
 	struct StringNode* head = NULL;
 	char* ret = NULL;
 	char* needle = strchr(line, HISTORY_CHAR);
-	if (!needle) { return line; }
+	
+	if (!needle) { 
+		ret = calloc(strlen(line)+1, sizeof(char));
+		strcpy(ret, line);
+		return ret;
+	}
 
 	int prefix_len = ((int)(needle-line));
 	char* prefix = calloc(prefix_len+1, sizeof(char));

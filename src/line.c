@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <ANSIsACurse/cursor.h>
 #include <string.h>
+#include <assert.h>
 
 #include "line.h"
 #include "line_tools.h"
@@ -34,4 +35,13 @@ void line_autocomplete_word(Line* const line, char* word) {
 	if (!word) { return; }
 	delete_current_word(line->buffer, &line->cursor_location);
 	line_printstr(line, word);
+}
+
+void line_delete_current_line(Line* const line) {
+	assert(line);
+	if (line->buffer) {
+		mv_cursor_buff_start(line->buffer, &line->cursor_location);
+		free(line->buffer);
+		line->cursor_location = 0;
+	} line->buffer = calloc(line->max_buff_size, sizeof(char));
 }

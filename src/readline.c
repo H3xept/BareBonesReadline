@@ -10,6 +10,7 @@
 #include <ANSIsACurse/cursor.h>
 #include <BareBonesHistory/history.h>
 
+#include "history_parser.h"
 #include "line.h"
 #include "ctrl.h"
 #include "keymapper.h"
@@ -147,9 +148,12 @@ void register_handlers() {
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_RIGHT, h_line_arrow_right);
 }
 
-char* parse_line(char* line) {
-	
-	char* globbed_line = glob_line(line);
+char* parse_line(const char* line) {
+	char* history_parsed = ht_parse(line);
+	#warning edit
+	add_history_entry(history_parsed);
+	char* globbed_line = glob_line(history_parsed);
+	free(history_parsed);
 	return globbed_line;
 }
 

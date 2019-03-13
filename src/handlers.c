@@ -1,4 +1,5 @@
 #include <ANSIsACurse/cursor.h>
+#include <BareBonesHistory/history.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,6 +14,8 @@ extern Line* g_line;
 extern int* is_done;
 extern int previous_key;
 
+static int curr_hist = 0;
+
 int h_line_backspace() {
 	if (g_line->cursor_location == 0) { return 0; }
 	com_backspace(g_line->buffer, &g_line->cursor_location);
@@ -26,10 +29,37 @@ int h_line_delete() {
 }
 
 int h_line_arrow_up() {
+	
+	if (!g_line->buffer) return 0;
+
+	int e_n = entries_n();
+	if (curr_hist < e_n) {
+		curr_hist++;
+	}
+
+	char* prev_invoc = get_history_entry((e_n-curr_hist)+1);
+	if (!prev_invoc) return 0;
+
+	line_delete_current_line(g_line);
+	line_printstr(g_line, prev_invoc);
+
 	return 0;
 }
 
 int h_line_arrow_down() {
+	if (!g_line->buffer) return 0;
+
+	int e_n = entries_n();
+	if (curr_hist > 1) {
+		curr_hist--;
+	}
+
+	char* prev_invoc = get_history_entry((e_n-curr_hist)+1);
+	if (!prev_invoc) return 0;
+
+	line_delete_current_line(g_line);
+	line_printstr(g_line, prev_invoc);
+
 	return 0;
 }
 
@@ -53,6 +83,7 @@ int h_line_arrow_right() {
 
 int h_control_c() {
 	printf("\n");
+	curr_hist = 0;
 	return 0;
 }
 
@@ -63,6 +94,7 @@ int h_control_d() {
 
 int h_enter() {
 	printf("\n");
+	curr_hist = 0;
 	return 0;
 }
 

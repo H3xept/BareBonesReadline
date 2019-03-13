@@ -63,3 +63,11 @@ void delete_current_word(char* current_buffer, unsigned int* cursor_location) {
 	if (ct_beginning > 0)
 		mv_c_hor(-ct_beginning);
 }
+
+void mv_cursor_buff_start(const char* const current_buffer, unsigned int* cursor_location) {
+	assert(current_buffer);
+	for (int i = 0; i < strlen(current_buffer); i++) {
+		mv_c_hor(-1);
+		(*cursor_location)--;
+	}
+}
