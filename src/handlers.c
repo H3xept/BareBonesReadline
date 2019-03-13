@@ -9,6 +9,7 @@
 #include "line.h"
 #include "line_tools.h"
 #include "globber.h"
+#include "tilde_expansion.h"
 
 extern Line* g_line;
 extern int* is_done;
@@ -102,8 +103,9 @@ int h_tab() {
 	// Very temporary!
 	char* last_word = get_last_word(g_line->buffer, &g_line->cursor_location);
 	if (!last_word) { last_word = calloc(2, sizeof(char)); strcpy(last_word, "/"); }
+	char* e_last_word = expand_tildes(last_word);
 
-	struct StringNode* completion = expand_string(last_word);
+	struct StringNode* completion = expand_string(e_last_word);
 	int ret = 0;
 	if (previous_key == ASCII_TAB) {
 		if (sa_get_size(completion) > 1) {
@@ -126,6 +128,7 @@ int h_tab() {
 			line_autocomplete_word(g_line, shortest);
 		}
 	} 
+	if (e_last_word) { free(e_last_word); }
 	if (last_word) { free(last_word); }
 	if (completion) { sa_destroy(completion); }
 	return ret;

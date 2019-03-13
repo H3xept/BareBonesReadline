@@ -16,6 +16,7 @@
 #include "keymapper.h"
 #include "handlers.h"
 #include "globber.h"
+#include "tilde_expansion.h"
 
 #define MAX_INPUT_BUFFER_SIZE 500
 
@@ -149,11 +150,15 @@ void register_handlers() {
 }
 
 char* parse_line(const char* line) {
+	#warning edit add history entry
 	char* history_parsed = ht_parse(line);
-	#warning edit
 	add_history_entry(history_parsed);
-	char* globbed_line = glob_line(history_parsed);
+	
+	char* tilde_expanded = expand_tildes(history_parsed);
+	char* globbed_line = glob_line(tilde_expanded);
+
 	free(history_parsed);
+	free(tilde_expanded);
 	return globbed_line;
 }
 
