@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <string.h>
 #include "string_array.h"
+#include "string_utils.h"
 
 struct StringNode * sa_new(const char* const data) {
 	struct StringNode* node = calloc(1, sizeof(struct StringNode));
@@ -199,4 +200,29 @@ int sa_get_size(const struct StringNode* const head) {
 		len++;
 		curr = curr->next;
 	} return len;
+}
+
+void sa_escape_all_spaces(struct StringNode* head) {
+	struct StringNode* curr = head;
+	while(curr) {
+		if (!curr->data) goto next_it;
+		char* temp = su_replace_occurrencies_of(curr->data, " ", "\\ ");
+		free(curr->data);
+		curr->data = temp;
+next_it: 
+		curr = curr->next;
+	}
+}
+
+void sa_escape_non_escaped_spaces(struct StringNode* head) {
+
+	struct StringNode* curr = head;
+	while(curr) {
+		if (curr->data) {
+			char* new_data = su_escape_spaces(curr->data);
+			free(curr->data);
+			curr->data = new_data;
+		}
+		curr = curr->next;
+	}
 }

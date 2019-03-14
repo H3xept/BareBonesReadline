@@ -3,6 +3,7 @@
 
 void setup();
 void testReplaceInnerStr();
+void testEscapedString();
 void teardown();
 
 #endif

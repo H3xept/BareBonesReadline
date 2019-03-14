@@ -7,7 +7,7 @@
 char* su_replace_occurrencies_of(const char* const string,
 								 const char* const search, 
 								 const char* const replace) {
-
+	if (!string) return NULL;
 	const char* s_occurrence = strstr(string, search);
 	if (!s_occurrence) {
 		char* str_cpy = calloc(strlen(string)+1, sizeof(char));
@@ -29,6 +29,20 @@ char* su_replace_occurrencies_of(const char* const string,
 		*(w_string+n_s_size) = '\0';
 		free(suffix);
 	} return w_string;
+}
+
+char* su_escape_spaces(const char* const string) {
+	int spaces = 0;
+	int offset = 0;
+	for (int i = 0; i < strlen(string); i++) {
+		if (i[string] == '\\') {i++; continue;}
+		else if (i[string] == ' ') spaces++;
+	}
+	char* escaped_str = calloc(strlen(string)+spaces+1,sizeof(char));
+	for (int i = 0; i < strlen(string); i++) {
+		if (i[string] == ' ' && i != 0 && (i-1)[string] != '\\') { *(escaped_str+i+offset) = '\\'; offset++; }
+		*(escaped_str+i+offset) = *(string+i);
+	} return escaped_str;
 }
 
 // Effective strlen

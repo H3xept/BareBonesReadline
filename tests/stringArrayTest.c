@@ -97,3 +97,10 @@ void testNaiveConcat() {
 	sa_append(head, new_node);
 	assert_eq_str("Helloleo", sa_concat(head, 0));
 }
+
+void testEscapeNonEscapedSpaces() {
+	struct StringNode* test = sa_new("Desktop/Uni_Drive/Year 1");
+	sa_escape_non_escaped_spaces(test);
+	assert_eq_str("Desktop/Uni_Drive/Year\\ 1",test->data);
+}
+

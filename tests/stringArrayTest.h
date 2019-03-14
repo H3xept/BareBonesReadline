@@ -13,6 +13,7 @@ void testAppend();
 void testNaiveConcat();
 void testedit();
 void testShortest();
+void testEscapeNonEscapedSpaces();
 void teardown();
 
 #endif

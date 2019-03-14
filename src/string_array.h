@@ -18,5 +18,7 @@ void sa_edit_prepend_all(struct StringNode* head, const char* const prep_string)
 char* sa_concat(struct StringNode* head, const char symbol);
 char* sa_get_shortest(const struct StringNode* const head);
 int sa_get_size(const struct StringNode* const head);
+void sa_escape_all_spaces(struct StringNode* head);
+void sa_escape_non_escaped_spaces(struct StringNode* head);
 
 #endif

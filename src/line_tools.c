@@ -42,7 +42,9 @@ void insert_char(char* const current_buffer, unsigned int* cursor_location, cons
 
 static int chars_to_word_beginning(const char* const current_buffer, const unsigned int* const cursor_location) {
 	int i = 0;
-	while((*cursor_location)-i != 0 && *(current_buffer+(*cursor_location)-i-1) != ' ') {
+	while((*cursor_location)-i != 0 && 
+	(*(current_buffer+(*cursor_location)-i-1) != ' ' ||
+	 (*(current_buffer+(*cursor_location)-i-1) == ' ' && *(current_buffer+(*cursor_location)-i-2) == '\\'))) {
 		i++;
 	}
 	return i;

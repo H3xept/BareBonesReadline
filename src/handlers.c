@@ -109,7 +109,9 @@ int h_tab() {
 	strcat(star_end_lw, "*\0");
 
 	struct StringNode* completion = expand_string(star_end_lw);
-
+	if (sa_get_size(completion) == 1 && !strcmp(completion->data, star_end_lw)) return 0;
+	sa_escape_non_escaped_spaces(completion);
+	
 	int ret = 0;
 	if (previous_key == ASCII_TAB) {
 		if (sa_get_size(completion) > 1) {

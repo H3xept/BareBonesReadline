@@ -7,6 +7,7 @@
 #include "wildcard_path.h"
 #include "globber.h"
 #include "tokenizer.h"
+#include "string_utils.h"
 
 static char globbing_symbols[] = {'*','?'};
 static struct StringNode* matches = NULL;
@@ -23,7 +24,9 @@ static struct StringNode * resources_in_dir(const char* const path) {
 	struct StringNode* resources = NULL;
 	struct dirent *entry = NULL;
 
-    DIR *dir = opendir((path) ? path : "./");
+	char* e_path = su_replace_occurrencies_of(path, "\\ ", " ");
+
+    DIR *dir = opendir((e_path) ? e_path : "./");
 
     if (dir == NULL) {
     	return NULL;
@@ -31,7 +34,6 @@ static struct StringNode * resources_in_dir(const char* const path) {
 
     while((entry = readdir(dir)) != NULL) {
     	char* res_name = entry->d_name;
-
     	if (!resources) {
     		resources = sa_new(res_name);
     	} else {
@@ -40,6 +42,7 @@ static struct StringNode * resources_in_dir(const char* const path) {
 
     } closedir(dir);
 
+    free(e_path);
     return resources;
 }
 
@@ -233,7 +236,6 @@ static inline void filter_wildcards(const WildcardPath* const wildcard) {
 }
 
 struct StringNode * expand_string(const char* const string) {
-
 	assert(string);
 
 	if (matches) {
@@ -245,6 +247,7 @@ struct StringNode * expand_string(const char* const string) {
 	}
 
 	det_path = last_determinisitc_path_for_string(string);
+
 	size_t det_path_len = det_path ? strlen(det_path) : 0;
 	
 	const char* const to_glob = (strlen(string) == det_path_len) ? NULL : string+det_path_len;
@@ -274,18 +277,20 @@ static unsigned int contains_globbing_symbols(const char* const string) {
 
 static struct StringNode * glob(const char* const string) {
 	assert(string);
+	struct StringNode* ret;
 	if (contains_globbing_symbols(string)) {
-		return expand_string(string);
-	} return sa_new(string);
+		ret = expand_string(string);
+	} else ret = sa_new(string);
+	return ret;
 }
 
 char* glob_line(const char* const string) {
+	printf("Received line: %s\n",string);
 	#define SUBSTR_SEPARATOR ' '
 	
 	if (!string) { return ""; }
 
 	char* globbed_line = NULL;
-	assert(string);
 	char* to_glob = calloc(strlen(string)+1, sizeof(char));
 	strcpy(to_glob, string);
 	Tokenizer* tokenizer = new_tokenizer(to_glob, SUBSTR_SEPARATOR);
@@ -294,6 +299,7 @@ char* glob_line(const char* const string) {
 	char* token = NULL;
 	while((token = next_token(tokenizer))) {
 		struct StringNode* nodes = glob(token);
+		sa_escape_non_escaped_spaces(nodes);
 		if (!globbed) {
 			globbed = nodes;
 		} else {
@@ -308,5 +314,6 @@ char* glob_line(const char* const string) {
 		sa_destroy(globbed);
 	}
 	destroy_tokenizer(tokenizer);
+
 	return globbed_line;
 }
