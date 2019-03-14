@@ -150,11 +150,39 @@ void register_handlers() {
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_RIGHT, h_line_arrow_right);
 }
 
+char* escape_spaces_in_quotes(const char* const string) {
+	
+	if (strlen(string) == 0) return NULL;
+
+	assert(string);
+	char* ret = NULL;
+
+	char* prefix = substring_until_token(string, '"');
+	char* to_escape = substring_until_token(string+strlen(prefix)+1, '"');
+	char* escaped = su_escape_spaces(to_escape);
+	
+	char* next = escape_spaces_in_quotes(string+strlen(prefix)+strlen(to_escape)+1);
+	size_t next_size =  (next) ? strlen(next) : 0;
+	ret = calloc(strlen(escaped)+strlen(prefix)+next_size+1, sizeof(char));
+
+	strcpy(ret, prefix);
+	strcat(ret, escaped);
+	if (next) { strcat(ret, next); free(next); }
+
+	free(to_escape);
+	free(escaped);
+	free(prefix);
+
+	return ret;
+}
+
 char* parse_line(const char* line) {
 	char* tilde_expanded = expand_tildes(line);
 	char* globbed_line = glob_line(tilde_expanded);
+	char* escaped_spaces = escape_spaces_in_quotes(globbed_line);
 	free(tilde_expanded);
-	return globbed_line;
+	free(globbed_line);
+	return escaped_spaces;
 }
 
 char* read_line(const char* const prompt) {

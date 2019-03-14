@@ -4,6 +4,7 @@
 void setup();
 void testReplaceInnerStr();
 void testEscapedString();
+void testSubstringUntilToken();
 void teardown();
 
 #endif

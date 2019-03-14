@@ -61,3 +61,15 @@ size_t estrlen(const char* const string) {
 		else {cursor++; ret++;}
 	} return ret;
 }
+
+char* substring_until_token(const char* const string, char token) {
+	char* substr = calloc(strlen(string)+1, sizeof(char));
+	strcpy(substr, string);
+	int i;
+	
+	for (i = 0; i < strlen(string); ++i) {
+		if (i[substr] == token) { i[substr] = '\0'; break; }
+	} 
+	substr = realloc(substr, (i+1)*sizeof(char));
+	return substr;
+}

@@ -20,3 +20,10 @@ void testEscapedString() {
 	char* test = "Hi\\ leo";
 	assert_eq_str(test, su_escape_spaces(test));
 }
+
+void testSubstringUntilToken() {
+	char* test = "String \"with quotes\"";
+	assert_eq_str("String ", substring_until_token(test, '"'));
+	char* test2 = "String with no closed quotes";
+	assert_eq_str(test2, substring_until_token(test2, '"'));
+}
