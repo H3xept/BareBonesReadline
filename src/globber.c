@@ -96,7 +96,6 @@ static void filter_files_containing_s_at_index(char* substr,
 			sa_remove(&matches, str);
 		}
 		current = current->next;
-		continue;
 	}
 }
 
@@ -116,7 +115,19 @@ static void filter_files_containing_s_after_index(char* substr,
 			sa_remove(&matches, str);
 		}
 		current = current->next;
-		continue;
+	}
+}
+
+static void filter_ending_with(char* substr) {
+	if (!substr) { return; }
+	struct StringNode* current = matches;
+	char* last = NULL;
+	while(current != NULL) {
+		last = strrchr(current->data, *substr);
+		if (!last || strcmp(last, substr)) {
+			sa_remove(&matches, current->data);
+		}
+		current = current->next;
 	}
 }
 
@@ -155,6 +166,7 @@ static inline void filter_with_string(const WildcardString* const string) {
 		}
 	}
 	if (string->next) filter_with_string(string->next);
+	else if (!gs) {filter_ending_with(string->before_gs);}
 }
 
 static void filter_replace_with_dir_contents() {

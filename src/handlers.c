@@ -103,7 +103,12 @@ int h_tab() {
 	char* last_word = get_last_word(g_line->buffer, &g_line->cursor_location);
 	if (!last_word) { last_word = calloc(2, sizeof(char)); strcpy(last_word, "/"); }
 	char* e_last_word = expand_tildes(last_word);
-	struct StringNode* completion = expand_string(e_last_word);
+	
+	char star_end_lw[strlen(e_last_word)+2];
+	strcpy(star_end_lw, e_last_word);
+	strcat(star_end_lw, "*\0");
+
+	struct StringNode* completion = expand_string(star_end_lw);
 
 	int ret = 0;
 	if (previous_key == ASCII_TAB) {
