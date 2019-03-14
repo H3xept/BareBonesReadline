@@ -150,14 +150,8 @@ void register_handlers() {
 }
 
 char* parse_line(const char* line) {
-	#warning edit add history entry
-	char* history_parsed = ht_parse(line);
-	add_history_entry(history_parsed);
-	
-	char* tilde_expanded = expand_tildes(history_parsed);
+	char* tilde_expanded = expand_tildes(line);
 	char* globbed_line = glob_line(tilde_expanded);
-
-	free(history_parsed);
 	free(tilde_expanded);
 	return globbed_line;
 }
@@ -198,10 +192,16 @@ break_while:
 
 	returned_string = g_line->buffer;
 
+	char* history_parsed = ht_parse(returned_string);
+	if (*history_parsed != '\0')
+		add_history_entry(history_parsed);
+	char* parsed_line = parse_line(history_parsed);
+	
 	free(g_line);
 	g_line = 0;
-
-	return parse_line(returned_string);
+	free(history_parsed);
+	free(returned_string);
+	return parsed_line;
 }
 
 // -- End Input Handling
