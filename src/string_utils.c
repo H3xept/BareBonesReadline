@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "string_utils.h"
 
 char* su_replace_occurrencies_of(const char* const string,
@@ -28,4 +29,21 @@ char* su_replace_occurrencies_of(const char* const string,
 		*(w_string+n_s_size) = '\0';
 		free(suffix);
 	} return w_string;
+}
+
+// Effective strlen
+size_t estrlen(const char* const string) {
+	if (!string) return 0;
+
+	size_t ret = 0;
+	const char* cursor = string;
+
+	while (*cursor != '\0')
+	{
+		if (*cursor == 27) { 
+			do {cursor++;}while(*cursor && *(cursor) != 'm'); 
+			if (*cursor == 'm') cursor++;
+		}
+		else {cursor++; ret++;}
+	} return ret;
 }

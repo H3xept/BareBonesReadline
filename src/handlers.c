@@ -68,7 +68,6 @@ int h_line_arrow_down() {
 int h_line_arrow_left() {
 	int can_move_left = g_line->cursor_location > 0;
 	if (can_move_left) {
-		mv_c_lt(1);
 		g_line->cursor_location -= 1;
 	}
 	return 0;
@@ -77,7 +76,6 @@ int h_line_arrow_left() {
 int h_line_arrow_right() {
 	int can_move_right = g_line->cursor_location < strlen(g_line->buffer);
 	if (can_move_right) {
-		mv_c_rt(1);
 		g_line->cursor_location += 1;
 	}
 	return 0;
