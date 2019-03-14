@@ -62,13 +62,11 @@ void enable_raw() {
 
 // -- Begin input handling --
 void redraw_line(const char* const prompt) {
-	// save_c_pos();
 	del_line();
 	mv_c_l_beg();
 	printf("%s%s", prompt, g_line->buffer);
 	mv_c_l_beg();
 	mv_c_hor(estrlen(prompt)+g_line->cursor_location);
-	// restore_c_pos();
 }
 
 int read_character() {
