@@ -29,7 +29,6 @@ struct KeyMap* g_head;
 int previous_key = 0x0;
 static int* is_done;
 static int initialised = 0;
-static int start_r, start_c;
 // -- Begin Termios Config --
 
 static struct termios* termios_data = NULL;
@@ -64,21 +63,6 @@ void enable_raw() {
 // -- End Termios Config --
 
 // -- Begin input handling --
-
-int getCursorPosition(int *rows, int *cols) {
-  char buf[32];
-  unsigned int i = 0;
-  if (write(STDOUT_FILENO, "\x1b[6n", 4) != 4) return -1;
-  while (i < sizeof(buf) - 1) {
-    if (read(STDIN_FILENO, &buf[i], 1) != 1) break;
-    if (buf[i] == 'R') break;
-    i++;
-  }
-  buf[i] = '\0';
-  if (buf[0] != '\x1b' || buf[1] != '[') return -1;
-  if (sscanf(&buf[2], "%d;%d", rows, cols) != 2) return -1;
-  return 0;
-}
 
 void redraw_line(const char* const prompt) {
 
@@ -188,6 +172,7 @@ void register_handlers() {
 	km_add_new(g_head, ASCII_CONTROL_A, h_control_a);
 	km_add_new(g_head, ASCII_CONTROL_E, h_control_e);
 	km_add_new(g_head, ASCII_CONTROL_K, h_control_k);
+	
 	km_add_new(g_head, ASCII_ENTER, h_enter);
 	km_add_new(g_head, ASCII_TAB, h_tab);
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_UP, h_line_arrow_up); 
@@ -246,7 +231,6 @@ char* read_line(const char* const prompt) {
 	g_line = init_line(MAX_INPUT_BUFFER_SIZE);
 
 	enable_raw();
-	getCursorPosition(&start_r,&start_c);
 	atexit(reset_termios_data);	
 	redraw_line(prompt);
 
