@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <assert.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <math.h>
 
 #include "ctrl.h"
 #include "handlers.h"
@@ -175,6 +178,25 @@ int h_control_e() {
 }
 
 int h_control_k() {
+    struct winsize w;
+    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+    int rows_n = w.ws_row;
+    int current_row = 0;
+    char response[5] = {0x0};
+
+	write(1, "\033[6n", 4);
+	read(1,response,4);
+	sscanf(response+2, "%d", &current_row);
+
+    for (int i = 0; i < rows_n-current_row; i++) {
+    	mv_c_vert(1);
+    	del_line();
+    }
+
+    for (int i = 0; i < rows_n-current_row; i++) {
+    	mv_c_vert(-1);
+    }
+
 	memset(g_line->buffer+g_line->cursor_location, 0x0, 
 		strlen(g_line->buffer)-g_line->cursor_location);
 	return 0;

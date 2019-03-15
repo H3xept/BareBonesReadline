@@ -315,5 +315,6 @@ char* glob_line(const char* const string) {
 	}
 	destroy_tokenizer(tokenizer);
 
+	if (to_glob) free(to_glob);
 	return globbed_line;
 }
