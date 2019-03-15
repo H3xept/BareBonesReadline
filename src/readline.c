@@ -166,7 +166,7 @@ void register_handlers() {
 }
 
 char* escape_spaces_in_quotes(const char* const string) {
-	
+	if (!string) return NULL;
 	if (strlen(string) == 0) return NULL;
 
 	assert(string);
