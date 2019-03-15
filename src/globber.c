@@ -141,7 +141,6 @@ static void hanlde_question_mark(unsigned int cur_len) {
 	while(current != NULL) {
 		char* str = current->data + index_of_last_slash(current->data);
 		size_t str_len = strlen(str);
-
 		if (str_len < cur_len+1) {
 			sa_remove(&matches, str);
 		}
@@ -159,12 +158,14 @@ static inline void filter_with_string(const WildcardString* const string) {
 	static_filter(string->before_gs, abs(string->index));
 
 	char* gs = string->gs;
+	size_t before_gs_len = (string->before_gs) ? 
+		strlen(string->before_gs) : 0;	
 	if (gs) {
 		switch(*gs) {
 			case '*':
 				break;
 			case '?':
-				hanlde_question_mark(string->index+strlen(string->before_gs));
+				hanlde_question_mark(string->index+before_gs_len);
 				break;
 		}
 	}
