@@ -31,13 +31,6 @@ static int is_requesting_invocation_number(const char* const start, int len, int
 	} return 0;
 }
 
-static int invocation_len(const char* const string) {
-	int len = 0;
-	for (; len < strlen(string); len++) {
-		if (*(string+len) == ' ') break;
-	} return len;
-}
-
 static char* ht_invocation_for_substring(const char* const start, int len) {
 	
 	assert(start);

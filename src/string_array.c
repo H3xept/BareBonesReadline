@@ -122,16 +122,6 @@ void sa_edit_prepend_all(struct StringNode* head, const char* const prep_string)
 	}
 }
 
-static int number_of_strings(struct StringNode* head) {
-	int ret = 0;
-	struct StringNode* curr = head;
-	while(curr) {
-		ret++;
-		curr = curr->next;
-	}
-	return ret;
-}
-
 static char* naive_concat(struct StringNode* head) {
 	struct StringNode* curr = head;
 	char* ret = NULL;
