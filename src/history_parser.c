@@ -5,8 +5,9 @@
 #include <BareBonesHistory/history.h>
 #include "history_parser.h"
 #include "string_array.h"
+#include "string_utils.h"
 
-#define HISTORY_CHAR '!'
+#define HISTORY_CHAR "!"
 
 static int is_requesting_negative_invocation_number(const char* const start, int len, int* num) {
 	assert(start);
@@ -57,38 +58,29 @@ static char* ht_invocation_for_substring(const char* const start, int len) {
 }
 
 char* ht_parse(const char* const line) {
-
 	if (!line) { return (char*) calloc(1, sizeof(char)); }
-
-	struct StringNode* head = NULL;
-	char* ret = NULL;
-	char* needle = strchr(line, HISTORY_CHAR);
 	
-	if (!needle) { 
-		ret = calloc(strlen(line)+1, sizeof(char));
-		strcpy(ret, line);
-		return ret;
+	char* s_invocation = strstr(line, HISTORY_CHAR);
+
+	char* new_line = calloc(strlen(line)+1, sizeof(char));
+	strcpy(new_line, line);
+
+	while(s_invocation) {
+		char* substring = substring_until_token(s_invocation, ' ');
+		char* invocation = ht_invocation_for_substring(substring,strlen(substring));
+		char* temp = NULL;
+
+		if (!invocation) return NULL;
+		temp = new_line;
+
+		new_line = su_replace_occurrencies_of(temp,substring,invocation);
+
+		s_invocation = strstr(new_line, HISTORY_CHAR);
+		
+		if (temp) free(temp);
+		if (substring) free(substring);	
 	}
 
-	int prefix_len = ((int)(needle-line));
-	char* prefix = calloc(prefix_len+1, sizeof(char));
-	strncpy(prefix, line, prefix_len);
-	size_t i_len = invocation_len(needle);
 
-	char* invocation = ht_invocation_for_substring(needle, i_len);
-	if (!invocation) {
-		printf("Event not found\n");
-		return NULL;
-	}
-
-	head = sa_new(prefix);
-	sa_add_new(head, invocation);
-	sa_append(head, sa_new(ht_parse(strchr(needle+i_len, HISTORY_CHAR))));
-
-	free(prefix);
-
-	ret = sa_concat(head, 0x0);
-	sa_destroy(head);
-	
-	return ret;
+	return new_line;
 }

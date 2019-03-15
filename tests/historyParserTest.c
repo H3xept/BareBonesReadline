@@ -36,3 +36,8 @@ void testNonExistingInvocation() {
 void testSingleBang() {
 	assert_null(ht_parse("!"));
 }
+
+void testMaintainRestOfString() {
+	char* test = "!-1 testino";
+	assert_eq_str("Entry 1 testino", ht_parse(test))
+}

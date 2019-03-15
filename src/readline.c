@@ -277,6 +277,7 @@ break_while:
 	g_line = 0;
 	if (history_parsed) free(history_parsed);
 	free(returned_string);
+	printf("Parsed: %s\n",parsed_line);
 	return parsed_line;
 }
 

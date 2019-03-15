@@ -31,6 +31,7 @@ char* su_replace_occurrencies_of(const char* const string,
 	} return w_string;
 }
 
+
 char* su_escape_spaces(const char* const string) {
 	int spaces = 0;
 	int offset = 0;

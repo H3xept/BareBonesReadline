@@ -8,5 +8,6 @@ void testPositiveNumberInvocation();
 void testNegativeNumberInvocation();
 void testNonExistingInvocation();
 void testSingleBang();
+void testMaintainRestOfString();
 
 #endif
