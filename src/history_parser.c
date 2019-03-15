@@ -43,7 +43,9 @@ static char* ht_invocation_for_substring(const char* const start, int len) {
 	char* invocation = NULL;
 	int num = 0;
 
-	if (!strncmp(start, "!!",len)) {
+	if (!strcmp(start, "!")){
+		return NULL;
+	} else if (!strncmp(start, "!!",len)) {
 		invocation = current_history_entry();
 	} else if (is_requesting_negative_invocation_number(start, len, &num)){
 		invocation = get_history_entry(entries_n()-num+1);
@@ -56,7 +58,7 @@ static char* ht_invocation_for_substring(const char* const start, int len) {
 
 char* ht_parse(const char* const line) {
 
-	if (!line) { return ""; }
+	if (!line) { return (char*) calloc(1, sizeof(char)); }
 
 	struct StringNode* head = NULL;
 	char* ret = NULL;

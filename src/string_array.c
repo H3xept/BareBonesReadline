@@ -5,6 +5,7 @@
 #include "string_utils.h"
 
 struct StringNode * sa_new(const char* const data) {
+	assert(data);
 	struct StringNode* node = calloc(1, sizeof(struct StringNode));
 	node->data = calloc(strlen(data)+1, sizeof(char));
 	strcpy(node->data, data);

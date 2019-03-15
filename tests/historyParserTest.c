@@ -28,3 +28,11 @@ void testNegativeNumberInvocation() {
 	char* test = "!-1";
 	assert_eq_str("Entry 1", ht_parse(test));	
 }
+
+void testNonExistingInvocation() {
+	assert_null(ht_parse("!345676543"));
+}
+
+void testSingleBang() {
+	assert_null(ht_parse("!"));
+}

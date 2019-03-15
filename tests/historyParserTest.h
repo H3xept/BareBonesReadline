@@ -6,5 +6,7 @@ void teardown();
 void testLastInvocation();
 void testPositiveNumberInvocation();
 void testNegativeNumberInvocation();
+void testNonExistingInvocation();
+void testSingleBang();
 
 #endif

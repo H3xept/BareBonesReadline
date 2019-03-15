@@ -87,7 +87,11 @@ void redraw_line(const char* const prompt) {
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     int chars_in_row = w.ws_col;
-    int lines = ceil((estrlen(g_line->buffer)+estrlen(prompt))/chars_in_row);
+    
+    int lines = 0;
+    if (chars_in_row)
+    	lines = ceil((estrlen(g_line->buffer)+estrlen(prompt))/chars_in_row);
+
 	reset_termios_data();
 
 	del_line();
@@ -217,6 +221,7 @@ char* escape_spaces_in_quotes(const char* const string) {
 }
 
 char* parse_line(const char* line) {
+	if (!line) return NULL;
 	char* tilde_expanded = expand_tildes(line);
 	char* globbed_line = glob_line(tilde_expanded);
 	char* escaped_spaces = escape_spaces_in_quotes(globbed_line);
@@ -263,13 +268,14 @@ break_while:
 	returned_string = g_line->buffer;
 
 	char* history_parsed = ht_parse(returned_string);
-	if (*history_parsed != '\0')
+	if (history_parsed && *history_parsed != '\0'){
 		add_history_entry(history_parsed);
+	}
 	char* parsed_line = parse_line(history_parsed);
 	
 	free(g_line);
 	g_line = 0;
-	free(history_parsed);
+	if (history_parsed) free(history_parsed);
 	free(returned_string);
 	return parsed_line;
 }
