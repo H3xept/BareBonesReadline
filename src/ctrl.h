@@ -6,6 +6,7 @@
 #define ASCII_CONTROL_D CTRL_('d')
 #define ASCII_CONTROL_A CTRL('a')
 #define ASCII_CONTROL_E CTRL('e')
+#define ASCII_CONTROL_K CTRL('k')
 #define ASCII_CONTROL 0x1b
 #define ASCII_BACKSPACE 0x08
 #define ASCII_DELETE 0x7f

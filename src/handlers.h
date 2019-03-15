@@ -20,5 +20,6 @@ int h_control_d();
 int h_enter();
 int h_control_a();
 int h_control_e();
+int h_control_k();
 
 #endif

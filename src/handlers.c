@@ -174,3 +174,8 @@ int h_control_e() {
 	return 0;
 }
 
+int h_control_k() {
+	memset(g_line->buffer+g_line->cursor_location, 0x0, 
+		strlen(g_line->buffer)-g_line->cursor_location);
+	return 0;
+}

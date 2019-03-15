@@ -185,14 +185,15 @@ void register_handlers() {
 
 	km_add_new(g_head, ASCII_CONTROL_C, h_control_c);
 	km_add_new(g_head, ASCII_CONTROL_D, h_control_d);
+	km_add_new(g_head, ASCII_CONTROL_A, h_control_a);
+	km_add_new(g_head, ASCII_CONTROL_E, h_control_e);
+	km_add_new(g_head, ASCII_CONTROL_K, h_control_k);
 	km_add_new(g_head, ASCII_ENTER, h_enter);
 	km_add_new(g_head, ASCII_TAB, h_tab);
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_UP, h_line_arrow_up); 
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_DOWN, h_line_arrow_down);  
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_LEFT, h_line_arrow_left);
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_RIGHT, h_line_arrow_right);
-	km_add_new(g_head, ASCII_CONTROL_A, h_control_a);
-	km_add_new(g_head, ASCII_CONTROL_E, h_control_e);
 }
 
 char* escape_spaces_in_quotes(const char* const string) {
