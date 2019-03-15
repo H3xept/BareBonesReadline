@@ -9,6 +9,9 @@
 #include <signal.h>
 #include <ANSIsACurse/cursor.h>
 #include <BareBonesHistory/history.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <math.h>
 
 #include "history_parser.h"
 #include "line.h"
@@ -62,6 +65,18 @@ void enable_raw() {
 
 // -- Begin input handling --
 void redraw_line(const char* const prompt) {
+	// del_line();
+ //    struct winsize w;
+ //    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+ //    int chars_in_row = w.ws_col;
+ //    int lines = ceil((estrlen(g_line->buffer)+estrlen(prompt)-2)/chars_in_row);
+	// mv_c_vert(-lines);
+ // 	mv_c_l_beg();
+ //    printf("%s%s",prompt,g_line->buffer);
+ //    mv_c_l_beg();
+ //    if (lines > 0) {
+ // 		mv_c_hor(g_line->cursor_location - (lines*chars_in_row - estrlen(prompt)));
+ //    } else mv_c_hor(estrlen(prompt)+g_line->cursor_location);
 	del_line();
 	mv_c_l_beg();
 	printf("%s%s", prompt, g_line->buffer);

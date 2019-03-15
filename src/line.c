@@ -20,7 +20,6 @@ void line_printc(Line* const line, const char c) {
 	int line_is_full = (line->cursor_location)+1 > line->max_buff_size;
 
 	if (!line_is_full) {
-		printf("%c", c);
 		insert_char(line->buffer, &line->cursor_location, c);
 	}
 }
