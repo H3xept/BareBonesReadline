@@ -52,12 +52,15 @@ int h_line_arrow_down() {
 	if (!g_line->buffer) return 0;
 
 	int e_n = entries_n();
-	if (curr_hist > 1) {
+	if (curr_hist > 0) {
 		curr_hist--;
 	}
 
 	char* prev_invoc = get_history_entry((e_n-curr_hist)+1);
-	if (!prev_invoc) return 0;
+	if (!prev_invoc) {
+		line_delete_current_line(g_line);
+		return 0;
+	}
 
 	line_delete_current_line(g_line);
 	line_printstr(g_line, prev_invoc);
