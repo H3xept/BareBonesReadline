@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <assert.h>
 
 #include "ctrl.h"
 #include "handlers.h"
@@ -17,6 +19,15 @@ extern int* is_done;
 extern int previous_key;
 
 static int curr_hist = 0;
+
+static int is_dir(const char* path) {
+	assert(path);
+	struct stat stat_;
+	char* unescaped = su_replace_occurrencies_of(path, "\\ ", " ");
+    stat(unescaped, &stat_);
+    if (unescaped) free(unescaped);
+    return S_ISDIR(stat_.st_mode);
+}
 
 int h_line_backspace() {
 	if (g_line->cursor_location == 0) { return 0; }
@@ -133,6 +144,12 @@ int h_tab() {
 					break;
 				}
 			} while(completion);
+
+			if (is_dir(shortest)) {
+				shortest = realloc(shortest, strlen(shortest)+2);
+				*(shortest+strlen(shortest)) = '/';
+			}
+
 			char* temp = su_replace_occurrencies_of(
 				shortest,
 				getenv("HOME"), 
@@ -146,3 +163,14 @@ int h_tab() {
 	if (completion) { sa_destroy(completion); }
 	return ret;
 }
+
+int h_control_a() {
+	g_line->cursor_location = 0;
+	return 0;
+}
+
+int h_control_e() {
+	g_line->cursor_location = strlen(g_line->buffer);
+	return 0;
+}
+

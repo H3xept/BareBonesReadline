@@ -191,6 +191,8 @@ void register_handlers() {
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_DOWN, h_line_arrow_down);  
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_LEFT, h_line_arrow_left);
 	km_add_new(g_head, KEYMAP_HANDLE_ARROW_RIGHT, h_line_arrow_right);
+	km_add_new(g_head, ASCII_CONTROL_A, h_control_a);
+	km_add_new(g_head, ASCII_CONTROL_E, h_control_e);
 }
 
 char* escape_spaces_in_quotes(const char* const string) {
@@ -277,7 +279,6 @@ break_while:
 	g_line = 0;
 	if (history_parsed) free(history_parsed);
 	free(returned_string);
-	printf("Parsed: %s\n",parsed_line);
 	return parsed_line;
 }
 

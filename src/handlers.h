@@ -18,5 +18,7 @@ int h_tab();
 int h_control_c();
 int h_control_d();
 int h_enter();
+int h_control_a();
+int h_control_e();
 
 #endif
