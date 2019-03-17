@@ -73,8 +73,9 @@ void redraw_line(const char* const prompt) {
     int chars_in_row = w.ws_col;
     
     int lines = 0;
-    if (chars_in_row)
+    if (chars_in_row) {
     	lines = ceil((estrlen(g_line->buffer)+estrlen(prompt))/chars_in_row);
+    }
 
 	reset_termios_data();
 

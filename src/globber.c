@@ -113,7 +113,7 @@ static void filter_files_containing_s_after_index(char* substr,
 		char* str = current->data + index_of_last_slash(current->data);
 		size_t str_len = strlen(str);
 
-		if ( (index > str_len | index+substr_len-1 > str_len) || 
+		if ( ((index > str_len) | (index+substr_len-1 > str_len)) || 
 			!(strstr((str+index), substr)) ) {
 			sa_remove(&matches, str);
 		}
