@@ -241,12 +241,12 @@ char* read_line(const char* const prompt) {
 				goto break_while;
 				break;
 			case ASCII_CONTROL_C:
-				return "";
+				return NULL;
 			case ASCII_CONTROL_D:
 				*is_done = 1;
-				return "";
+				return NULL;
 			case -3:
-				return "";
+				return NULL;
 		}redraw_line(prompt);
 	}
 
