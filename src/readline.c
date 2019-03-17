@@ -281,6 +281,10 @@ void teardown_readline(void) {
 		km_destroy(g_head);	
 		g_head = 0;
 	}
+}
+
+void restore_buffered(void) {
 	reset_termios_data();
 }
+
 
