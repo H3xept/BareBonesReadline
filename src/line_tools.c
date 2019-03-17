@@ -28,8 +28,7 @@ void com_backspace(char* const current_buffer, unsigned int* cursor_location) {
 }
 
 void com_delete(char* const current_buffer, unsigned int* cursor_location) {
-	#warning UNINMPLEMENTED
-	printf("[!] UNIMPLEMENTED");
+	#pragma message("UNINMPLEMENTED")
 }
 
 void insert_char(char* const current_buffer, unsigned int* cursor_location, const char c) {

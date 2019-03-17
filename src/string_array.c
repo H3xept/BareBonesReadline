@@ -39,12 +39,15 @@ void sa_append(struct StringNode* node, struct StringNode* new_node) {
 
 struct StringNode * sa_search(struct StringNode* node, const char* const data) {
 	assert(node);
+	assert(data);
+
 	struct StringNode* search_node = node;
 
 	do {
-		if (!strcmp(search_node->data,data)) {
+		if (search_node->data && !strcmp(search_node->data,data)) {
 			return search_node;
-		} search_node = search_node->next;
+		} 
+		search_node = search_node->next;
 	} while(search_node != NULL);
 
 	return NULL;
