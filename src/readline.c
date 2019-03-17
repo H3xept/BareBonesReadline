@@ -236,7 +236,6 @@ char* read_line(const char* const prompt) {
 	redraw_line(prompt);
 
 	while(1) {
-		reset_termios_data();
 		switch(handle_input()) {
 			case ASCII_ENTER:
 				goto break_while;
