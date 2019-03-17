@@ -29,6 +29,8 @@ struct KeyMap* g_head;
 int previous_key = 0x0;
 static int* is_done;
 static int initialised = 0;
+static int initial_row = 0;
+
 // -- Begin Termios Config --
 
 static struct termios* termios_data = NULL;
@@ -66,6 +68,18 @@ void enable_raw() {
 
 void redraw_line(const char* const prompt) {
 
+    char response[5] = {0x0};
+    int current_row = 0;
+
+	write(1, "\033[6n", 4);
+	read(1,response,4);
+	sscanf(response+2, "%d", &current_row);
+
+	for (int i = 0; i < current_row-initial_row; i++) {
+		del_line();
+		mv_c_vert(-1);
+	}
+	
 	reset_termios_data();
 
     struct winsize w;
@@ -219,7 +233,13 @@ char* parse_line(const char* line) {
 }
 
 char* read_line(const char* const prompt) {
-		
+
+    char response[5] = {0x0};
+
+	write(1, "\033[6n", 4);
+	read(1,response,4);
+	sscanf(response+2, "%d", &initial_row);
+
 	assert(initialised);
 	char* returned_string;
 
