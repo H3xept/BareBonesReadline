@@ -241,11 +241,14 @@ char* read_line(const char* const prompt) {
 				goto break_while;
 				break;
 			case ASCII_CONTROL_C:
+				restore_buffered();
 				return NULL;
 			case ASCII_CONTROL_D:
 				*is_done = 1;
+				restore_buffered();
 				return NULL;
 			case -3:
+				restore_buffered();
 				return NULL;
 		}redraw_line(prompt);
 	}
@@ -286,5 +289,3 @@ void teardown_readline(void) {
 void restore_buffered(void) {
 	reset_termios_data();
 }
-
-
