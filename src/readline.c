@@ -232,6 +232,7 @@ char* read_line(const char* const prompt) {
 
 	enable_raw();
 	atexit(reset_termios_data);	
+
 	redraw_line(prompt);
 
 	while(1) {
@@ -277,5 +278,10 @@ void init_readline(int* is_done_ptr) {
 }
 
 void teardown_readline(void) {
-	km_destroy(g_head);	
+	if (g_head) {
+		km_destroy(g_head);	
+		g_head = 0;
+	}
+	reset_termios_data();
 }
+
