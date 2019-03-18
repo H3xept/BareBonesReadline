@@ -11,7 +11,6 @@
 #include <BareBonesHistory/history.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
-#include <math.h>
 
 #include "history_parser.h"
 #include "line.h"
@@ -32,6 +31,11 @@ static int initialised = 0;
 // -- Begin Termios Config --
 
 static struct termios* termios_data = NULL;
+
+static int ceil(float num) {
+    int i = (int)num;
+    return (num == (float)i) ? i : i+1;
+}
 
 struct termios copy_current_termios_data() {
 	if (termios_data == NULL) {
