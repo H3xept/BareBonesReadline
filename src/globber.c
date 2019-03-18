@@ -286,6 +286,7 @@ static struct StringNode * glob(const char* const string) {
 }
 
 char* glob_line(const char* const string) {
+
 	#define SUBSTR_SEPARATOR ' '
 	
 	if (!string) { return ""; }

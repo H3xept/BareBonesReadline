@@ -182,17 +182,23 @@ void register_handlers() {
 }
 
 char* escape_spaces_in_quotes(const char* const string) {
-	if (!string) return NULL;
 
+
+	if (!string) return NULL;
 	if (strlen(string) == 0) return NULL;
 
-	assert(string);
+	if (!strstr(string, "\"")) {
+		char* buff = calloc(strlen(string)+1, sizeof(char));
+		strcpy(buff, string);
+		return buff;
+	}
+
 	char* ret = NULL;
 
 	char* prefix = substring_until_token(string, '"');
 	char* to_escape = substring_until_token(string+strlen(prefix)+1, '"');
 	char* escaped = su_escape_spaces(to_escape);
-	
+
 	char* next = escape_spaces_in_quotes(string+strlen(prefix)+strlen(to_escape)+2);
 	size_t next_size =  (next) ? strlen(next) : 0;
 	ret = calloc(strlen(escaped)+strlen(prefix)+next_size+1, sizeof(char));

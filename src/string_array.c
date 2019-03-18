@@ -153,7 +153,7 @@ char* sa_concat(struct StringNode* head, const char symbol) {
 		int has_next = (curr->next != NULL);
 		if (!ret_str) {
 			ret_str = calloc(strlen(curr->data)+1+has_next, sizeof(char));
-			strcpy(ret_str, curr->data);
+			strncpy(ret_str, curr->data, strlen(curr->data));
 			if (has_next) {
 				*(ret_str+strlen(curr->data)) = symbol;
 			}
