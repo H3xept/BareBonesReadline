@@ -190,11 +190,15 @@ char* escape_spaces_in_quotes(const char* const string) {
 	assert(string);
 	char* ret = NULL;
 
+	printf("Received: %s\n",string);
 	char* prefix = substring_until_token(string, '"');
+	printf("Prefix: %s\n",prefix);
 	char* to_escape = substring_until_token(string+strlen(prefix)+1, '"');
+	printf("To escape: %s\n",to_escape);
 	char* escaped = su_escape_spaces(to_escape);
+	printf("Escaped: %s\n",escaped);
 	
-	char* next = escape_spaces_in_quotes(string+strlen(prefix)+strlen(to_escape)+1);
+	char* next = escape_spaces_in_quotes(string+strlen(prefix)+strlen(to_escape)+2);
 	size_t next_size =  (next) ? strlen(next) : 0;
 	ret = calloc(strlen(escaped)+strlen(prefix)+next_size+1, sizeof(char));
 
@@ -206,6 +210,7 @@ char* escape_spaces_in_quotes(const char* const string) {
 	free(escaped);
 	free(prefix);
 
+	printf("%s became %s!\n",string, ret);
 	return ret;
 }
 
