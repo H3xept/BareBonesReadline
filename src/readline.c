@@ -67,7 +67,7 @@ void enable_raw() {
 void redraw_line(const char* const prompt) {
 
 	reset_termios_data();
-
+	
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     int chars_in_row = w.ws_col;
@@ -101,7 +101,6 @@ int read_character() {
 
 	int readc = 0;
 	int c = NOP;
-	
 	while((readc = read(STDIN_FILENO, &c, 1)) != 1) {
 		if (readc == -1) {
 			printf("Error in reading...");

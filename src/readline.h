@@ -7,5 +7,7 @@ char* read_line(const char* const prompt);
 char* parse_line(const char* line);
 void add_history(const char* command);
 char** get_history(void);
+void reset_termios_data();
+void enable_raw();
 
 #endif

@@ -16,6 +16,7 @@
 #include "globber.h"
 #include "tilde_expansion.h"
 #include "string_utils.h"
+#include "readline.h"
 
 extern Line* g_line;
 extern int* is_done;
@@ -33,7 +34,12 @@ static int is_dir(const char* path) {
 }
 
 int h_line_backspace() {
-	if (g_line->cursor_location == 0) { return 0; }
+	if (g_line->cursor_location == 0) {	
+		reset_termios_data();
+		printf("\a"); 
+		enable_raw(); 
+		return 0;
+	}
 	com_backspace(g_line->buffer, &g_line->cursor_location);
 	mv_c_hor(-1);
 	return 0;
