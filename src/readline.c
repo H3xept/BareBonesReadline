@@ -260,6 +260,8 @@ break_while:
 	char* history_parsed = ht_parse(returned_string);
 	if (history_parsed && *history_parsed != '\0'){
 		add_history_entry(history_parsed);
+	} else {
+		printf("Event not found!!\n");
 	}
 	char* parsed_line = parse_line(history_parsed);
 	

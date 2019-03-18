@@ -50,7 +50,7 @@ WildcardString* ws_new(const char* const string, const int index) {
 			break;
 		}
 
-		before_gs = calloc(strlen(string), sizeof(char));
+		before_gs = calloc(strlen(string)+1, sizeof(char));
 		strcpy(before_gs, string);
 		head->before_gs = before_gs;
 		i++;
